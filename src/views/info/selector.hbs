@@ -1,0 +1,71 @@
+<script src=""></script>
+<div class="container p-4">
+  <div class="row">
+    <div class="col-md-4  mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <br>
+
+          <label>Cliente:</label>
+          <select id="clients_select" class="form-control form-control-lg"
+            onchange="javascript: sendClient(this.options[this.selectedIndex].value);">
+            <option value="default" selected> Elija un cliente</option>
+            {{#each clients}}
+            <option value={{client_id}}>{{ client_id }} - {{client_name}} </option>
+            {{/each}}
+          </select>
+          <br>
+          <label>Campo:</label>
+          <select id="campo_select" class="form-control"
+            onchange="javascript: sendCampo(this.options[this.selectedIndex].value);">
+            <option value="default" selected>Elija un campo.</option>
+          </select>
+          <br>
+          <label>Lote:</label>
+          <select id="lote_select" class="form-control form-control-sm">
+            <option value="default" selected>Elija un lote del campo</option>
+          </select>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+  function sendClient(idClient) {
+    alert('sendClient');
+    alert(idClient);
+    /*  $.ajax({
+        type: "POST",
+        url: "localhost:3000/infoClient",
+        data: {idClient:idClient}
+        success: function() {
+              },
+              error: function(jqXHR, textStatus, err) {
+                  alert('text status '+textStatus+', err '+err)
+              }
+      });*/
+    $.post('/infoClient', { idClient: idClient }).done(function (data) {
+      alert("-RECEIVED       " + data[0].conuntryside_name);
+      const value = data[0].countryside_id;
+      const text = data[0].countryside_id + " - " + data[0].conuntryside_name;
+      alert("text: "+text+"   ...   value: "+value);
+      document.getElementById("campo_select").options[1] = new Option(text,value,false,false);
+      alert("-> "+document.getElementById("campo_select").options[1].text);
+    });
+
+  }
+
+  function sendCampo(idCampo) {
+    alert("sendCampo");
+    alert("--------------------------" + idCampo);
+    $.post('/infoCampo', { idCampo: idCampo }).done(function (data) {
+      alert("RECEIVED       " + data[0].countryside_id);
+      const value = data[0].lot_id;
+      const text = data[0].lot_id + " - " ;
+      document.getElementById("lote_select").options[1] = new Option(text, value, false, false);
+    });
+
+  }
+</script>

@@ -1,0 +1,42 @@
+{{!-- compruebo si existe el msj --}}
+{{#if success }}
+{{!-- <p>entra al if</p> --}}
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto"> {{!-- mx-auto: centra el msj --}}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{!-- alert-success: color de la alerta / alert-dismissible: que aparezca un icono y al hacerle click, se vaya el msj   / fade:  efecto para que el mesj se desvanezca  / show: que se muestre cuando reconozcamos el msj  / role=alert:  especifica mejor al navegador que es esta porcion de codigo  --}}
+                <i class="fas fa-check"></i>
+                {{  success }} {{!-- mensaje --}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> {{!-- boton x  --}}
+                    <span aria-hidden="true">
+                        &times;
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- {{else}}
+<p>no entra al if</p> --}}
+{{/if}}
+
+{{!-- valido  si existe el msj --}}
+{{#if message }}
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto"> {{!-- mx-auto: centra el msj --}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{!-- alert-danger: color de la alerta / alert-dismissible: que aparezca un icono y al hacerle click, se vaya el msj   / fade:  efecto para que el mesj se desvanezca  / show: que se muestre cuando reconozcamos el msj  / role=alert:  especifica mejor al navegador que es esta porcion de codigo  --}}
+                <i class="fas fa-exclamation"></i>
+                {{  message }} {{!-- mensaje --}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> {{!-- boton x  --}}
+                    <span aria-hidden="true">
+                        &times;
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{/if}}

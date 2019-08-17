@@ -1,0 +1,138 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/at_work/edit/{{at_work.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="emp_id">Empleado:</label>
+                            <select name="emp_id" id="emp_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Empleado. </option>
+                                {{#each employees}}
+                                <option value={{ employee_id }}>{{ employee_id }} - {{ employee_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="camp_id">Campaña:</label>
+                            <select name="camp_id" id="camp_id" class="form-control form-control-lg"
+                                onchange="javascript: sendCampaign(this.options[this.selectedIndex].value);">
+                                <option value="default"> Seleccione una Campaña. </option>
+                                {{#each campaigns}}
+                                <option value={{ campaign_id }}>{{ campaign_id }} - {{ campaign_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="work_id">Trabajo:</label>
+                            <select name="work_id" id="work_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Trabajo. </option>
+                                {{#each works}}
+                                <option value={{ work_id }}>{{ work_id }} - {{ type }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ha">HA realizadas:</label> <br>
+                            <input type="text" value="{{at_work.ha}}" class="form-control" id="ha" name="ha"
+                                placeholder="HA">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Precio por Hectarea:</label>
+                            <input type="text" class="form-control" value="{{at_work.price}}" id="price" name="price"
+                                placeholder="Precio/HA">
+                            {{!-- <br>
+                            <input type="radio" id="currency" name="currency" value="ARS" checked>
+                            Pesos Arg.
+                            <input type="radio" id="currency" name="currency" value="U$S"> Dolares --}}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total">Total:</label>
+                            <input type="text" class="form-control" value="{{at_work.total}}" id="total" name="total"
+                                placeholder="Total" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción:</label> <br>
+                            <textarea name="description" id="description" rows="2" class="form-control"
+                                placeholder="Descripción">{{at_work.description}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                            <a href="/at_work/" class="btn btn-success btn-block"> Cancelar </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    function SetSelectedOption() {
+        const emp_id = '{{at_work.employee}}';
+        const campaign_id = '{{at_work.campaign}}';
+        const work_id = '{{at_work.work}}';
+        const works = '{{works}}';
+        // const currency = '{{work.currency}}';
+        document.getElementById("emp_id").value = (emp_id ? emp_id : 'default');
+        document.getElementById("camp_id").value = (campaign_id ? campaign_id : 'default');
+        document.getElementById("work_id").value = ((work_id && works) ? work_id : 'default');
+        // $("input[name='currency'][value='" + currency + "']").prop("checked", true);
+
+    }
+
+    $(document).ready(SetSelectedOption);
+
+
+
+    function sendCampaign(camp_id) {
+        if (camp_id && camp_id != 'default') {
+            $.post('/at_work/infoCampaign', { camp_id: camp_id }).done(function (data) {
+                document.getElementById("work_id").options.length = 1;
+                data.forEach(function (element, index) {
+                    const value = element.work_id;
+                    const text = element.work_id + " - " + element.type;
+                    document.getElementById("work_id").options[index + 1] = new Option(text, value, false, false);
+                });
+
+                document.getElementById("work_id").value = 'default';
+
+
+            });
+        } else {
+            document.getElementById("work_id").options.length = 1;
+        }
+    }
+
+    $('#ha').focusout(function () {
+        const has = $('#ha').val();
+        const price = $('#price').val();
+        if (price && has) {
+            const val = (price * has);
+            //$("input[name='total']").prop("value", val);
+            $('#total').prop("value", val);
+        }
+    });
+
+    $('#price').focusout(function () {
+        const has = $('#ha').val();
+        const price = $('#price').val();
+        if (price && has) {
+            const val = (price * has);
+            //$("input[name='total']").prop("value", val);
+            $('#total').prop("value", val);
+        }
+    });
+</script>

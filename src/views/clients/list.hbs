@@ -1,0 +1,127 @@
+
+<br>
+<br>
+<div class="container p-2">
+    <div class="row">
+        <div class="col-md-2  mx-auto">
+            <div class="card">
+                <a class="btn btn-primary" href="/clients/add" role="button">Agregar!</a>                
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="div">
+<table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Cuit/Cuil</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      {{#each datos}}
+        <tr>
+            <td>{{ client_id }}</td>
+            <td>{{ client_dni }}</td>
+            <td>{{ client_name }}</td>
+            <td>{{ cuil_cuit }}</td>
+            <td> <a href="/clients/edit/{{client_id}}">   Modificar  </a> </td>
+            <td> <a href="/clients/delete/{{client_id}}">  Eliminar  </a> </td>
+        </tr>
+    {{/each}}
+    </tbody>
+    <tfoot>
+         <tr>
+            <th>ID</th>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Cuit/Cuil</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#listdata').DataTable( {
+        language: {url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"  },
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copiar',
+                exportOptions: {
+                    modifier: {
+                         page: 'current'
+                    }
+                }
+            }
+            , 
+             {
+                extend: 'csv',
+                text: 'Exportar a CSV',
+                filename: '{{tagExport}}'+'{{date}}',
+                exportOptions: {
+                    columns: ':visible'
+                }
+
+            }
+            , 
+            {
+                extend: 'excel',
+                text: 'Excel',
+                title: '{{tagExport}}',
+                filename: '{{tagExport}}'+'{{date}}',
+                exportOptions: {
+                    columns: ':visible'
+                }
+
+            }
+            , 
+            {
+                extend: 'pdf',
+                text: 'PDF',
+                title: '{{tagExport}}',
+                filename: '{{tagExport}}'+'{{date}}',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+            ,
+            {
+                extend: 'print',
+                text: 'Imprimir pagina corriente',
+                messageBottom: '\n Impreso en fecha: {{date}}',
+                //messageTop: '',
+              //  orientation: 'landscape',
+               // pageSize: 'A4',
+                title: '{{tagExport}}',
+                exportOptions: {
+                     columns: ':visible',
+                     modifier: {
+                         page: 'current'
+                     }
+                }
+                
+            }
+            ,
+            {
+                extend: 'colvis',
+                text: 'Mostrar/Ocultar Columnas'
+            }
+                       
+        ]
+    } );
+} );
+</script>
+

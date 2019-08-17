@@ -1,0 +1,135 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/work/add" method="POST">
+                        <div class="form-group">
+                            <label for="camp_id">Camapaña:</label>
+                            <select name="camp_id" id="camp_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione una Camapaña. </option>
+                                {{#each campaigns}}
+                                <option value={{ campaign_id }}> {{ campaign_id }} - {{ campaign_name }} </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Tipo">Tipo:</label>
+                            <input type="text" class="form-control" id="type" name="type" placeholder="Tipo" autofocus>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cereal">Cereal:</label>
+                            <input type="text" class="form-control" id="cereal" name="cereal" placeholder="Cereal">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ha">HA a cubrir:</label> <br>
+                            <input type="text" class="form-control" id="ha" name="ha" placeholder="HA">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Precio por Hectarea:</label>
+                            <input type="text" class="form-control" id="price" name="price" placeholder="Precio/HA">
+                            <br>
+                            <input type="radio" id="currency" name="currency" value="ARS" checked>
+                            Pesos Arg.
+                            <input type="radio" id="currency" name="currency" value="U$S"> Dolares
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">Estado:</label> <br>
+                            <input type="text" id="state" class="form-control" name="state" placeholder="Estado">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start">Fecha Comienzo:</label>
+                            <input type="date" class="form-control" id="start" name="start">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="end">Fecha Comienzo:</label>
+                            <input type="date" class="form-control" id="end" name="end">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="client_id">Cliente:</label>
+                            <select name="client_id" id="client_id" class="form-control form-control-lg"
+                                onchange="javascript: sendClient(this.options[this.selectedIndex].value);">
+                                <option value="default"> Seleccione un Cliente. </option>
+                                {{#each clients}}
+                                <option value={{ client_id }}> {{ client_id }} - {{ client_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cs_id">Campo:</label>
+                            <select name="cs_id" id="cs_id" class="form-control form-control-lg"
+                                onchange="javascript: sendCountryside(this.options[this.selectedIndex].value);">
+                                <option value="default"> Seleccione un Campo. </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lot_id">Lote:</label>
+                            <select name="lot_id" id="lot_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Lote. </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción:</label> <br>
+                            <textarea name="description" id="description" rows="2" class="form-control"
+                                placeholder="Descripción"></textarea>
+                            {{!--<input type="text" id="description" name="description" placeholder="Descripción">--}}
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    function sendClient(idClient) {
+        // alert('sendClient');
+        // alert(idClient);
+        if (idClient != 'default') {
+            $.post('/work/infoClient', { idClient: idClient }).done(function (data) {
+                // alert("-RECEIVED       " + data[0].countryside_name);
+                const value = data[0].countryside_id;
+                const text = data[0].countryside_id + " - " + data[0].countryside_name;
+                // alert("text: " + text + "   ...   value: " + value);
+                document.getElementById("cs_id").options[1] = new Option(text, value, false, false);
+                // alert("-> " + document.getElementById("cs_id").options[1].text);
+            });
+        }
+    }
+    function sendCountryside(idCountryside) {
+        // alert("sendCampo");
+        // alert("-------------------------->" + idCountryside);
+        if (idCountryside != 'default') {
+            $.post('/work/infoCountryside', { idCountryside: idCountryside }).done(function (data) {
+                // alert("RECEIVED       " + data[0].lot_id);
+                // alert("RECEIVED       " + data[0].lot_name);
+
+                const value = data[0].lot_id;
+                const text = data[0].lot_id + " - " + data[0].lot_name;
+
+
+                document.getElementById("lot_id").options[1] = new Option(text, value, false, false);
+                // alert("-> " + document.getElementById("select_lot").options[1].text);
+
+            });
+        }
+    }
+</script>

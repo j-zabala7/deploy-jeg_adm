@@ -1,0 +1,159 @@
+<br>
+<br>
+<div class="container p-2">
+    <div class="row">
+        <div class="col-md-2  mx-auto">
+            <div class="card">
+                <a class="btn btn-primary" href="/work/add" role="button">Agregar!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div id="tableContainer">
+    {{!--     <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+ class="container-fluid"
+ --}}
+    <table id="listdata"  class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Descripción</th>
+                <th>Fecha Comienzo</th>
+                <th>Fecha Fin</th>
+                <th>Precio Por HA</th>
+                <th>Moneda</th>
+                <th>HA trabajadas</th>
+                <th>ID Campaña</th>
+                <th>ID Cliente</th>
+                <th>ID Campo</th>
+                <th>ID Lote</th>
+                <th>Cereal</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each works}}
+            <tr>
+                <td>{{ work_id }}</td>
+                <td>{{ type }}</td>
+                <td>{{ work_state }}</td>
+                <td>{{ work_description }}</td>
+                <td>{{ start_date }}</td>
+                <td>{{ end_date }}</td>
+                <td>{{ pricexha }}</td>
+                <td>{{ currency }}</td>
+                <td>{{ work_ha }}</td>
+                <td>{{ campaign_id }}</td>
+                <td>{{ client_id }}</td>
+                <td>{{ countryside_id }}</td>
+                <td>{{ lot_id }}</td>
+                <td>{{ cereal }}</td>
+                <td> <a href="/work/edit/{{work_id}}"> Modificar </a> </td>
+                <td> <a href="/work/delete/{{work_id}}"> Eliminar </a> </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Descripción</th>
+                <th>Fecha Comienzo</th>
+                <th>Fecha Fin</th>
+                <th>Precio Por HA</th>
+                <th>Moneda</th>
+                <th>HA trabajadas</th>
+                <th>ID Campaña</th>
+                <th>ID Cliente</th>
+                <th>ID Campo</th>
+                <th>ID Lote</th>
+                <th>Cereal</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#listdata').DataTable({
+            language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
+            dom: 'Bfrtip',
+            responsive: true,
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    exportOptions: {
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+                }
+                ,
+                {
+                    extend: 'csv',
+                    text: 'Exportar a CSV',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+                ,
+                {
+                    extend: 'print',
+                    text: 'Imprimir pagina corriente',
+                    messageBottom: '\n Impreso en fecha: {{date}}',
+                    //messageTop: '',
+                    //  orientation: 'landscape',
+                    // pageSize: 'A4',
+                    title: '{{tagExport}}',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text: 'Mostrar/Ocultar Columnas'
+                }
+
+            ]
+        });
+    });
+</script>

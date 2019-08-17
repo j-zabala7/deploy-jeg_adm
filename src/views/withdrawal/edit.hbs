@@ -1,0 +1,115 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/withdrawal/edit/{{withdrawal.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="name">Cantida de dinero:</label>
+                            <input type="text" value="{{withdrawal.amount}}" class="form-control" id="amount"
+                                name="amount" placeholder="Dinero" autofocus>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date">Fecha:</label>
+                            <input type="date" value="{{withdrawal.date}}" id="date" class="form-control" name="date"
+                                placeholder="Fecha">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type">Tipo:</label>
+                            <input type="text" id="type" value="{{withdrawal.type}}" class="form-control" name="type"
+                                placeholder="Tipo">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emp_id">Empleado:</label>
+                            <select name="emp_id" id="emp_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Empleado. </option>
+                                {{#each employees}}
+                                <option value={{ employee_id }}>{{ employee_id }} - {{ employee_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delivered">Entregado:</label> <br>
+                            <input type="checkbox" name="delivered" id="delivered" value="delivered">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="camp_id">Campaña:</label>
+                            <select name="camp_id" id="camp_id" class="form-control form-control-lg"
+                                onchange="javascript: sendCampaign(this.options[this.selectedIndex].value);">
+                                <option value="default"> Seleccione una Campaña. </option>
+                                {{#each campaigns}}
+                                <option value={{ campaign_id }}>{{ campaign_id }} - {{ campaign_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="work_id">Trabajo:</label>
+                            <select name="work_id" id="work_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Trabajo. </option>
+                                {{#each works}}
+                                <option value={{ work_id }}>{{ work_id }} - {{ type }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Descripción:</label> <br>
+                            <textarea name="description" id="description" rows="2" class="form-control"
+                                placeholder="Descripción">{{withdrawal.description}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                            <a href="/withdrawal/" class="btn btn-success btn-block"> Cancelar </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script language="javascript" type="text/javascript">
+    function SetSelectedOption() {
+        document.getElementById("emp_id").value = ("{{withdrawal.emp_id}}") ? "{{withdrawal.emp_id}}" : 'default';
+        document.getElementById("camp_id").value = ("{{withdrawal.camp_id}}") ? "{{withdrawal.camp_id}}" : 'default';
+        document.getElementById("work_id").value = ("{{withdrawal.work_id}}") ? "{{withdrawal.work_id}}" : 'default';
+        if ("{{withdrawal.delivered}}" == 'delivered') {
+            $("#delivered").prop("checked", true);
+        }
+    }
+    $(document).ready(SetSelectedOption);
+
+    function sendCampaign(camp_id) {
+        if (camp_id && camp_id != 'default') {
+            $.post('/withdrawal/infoCampaign', { camp_id: camp_id }).done(function (data) {
+                document.getElementById("work_id").options.length = 1;
+                data.forEach(function (element, index) {
+                    const value = element.work_id;
+                    const text = element.work_id + " - " + element.type;
+                    document.getElementById("work_id").options[index + 1] = new Option(text, value, false, false);
+                });
+
+                document.getElementById("work_id").value = 'default';
+
+
+            });
+        } else {
+            document.getElementById("work_id").options.length = 1;
+        }
+    }
+
+</script>

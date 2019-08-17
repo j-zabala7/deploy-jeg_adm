@@ -1,0 +1,148 @@
+<br>
+<br>
+<div class="container p-2">
+    <div class="row">
+        <div class="col-md-2  mx-auto">
+            <div class="card">
+                <a class="btn btn-primary" href="/withdrawal/add" role="button">Agregar!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div id="tableContainer" class="div">
+    <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Emplado</th>
+                <th>Cantidad</th>
+                <th>Tipo</th>
+                <th>Entregado</th>
+                <th>Campaña</th>
+                <th>Trabajo</th>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each withdrawals}}
+            <tr>
+                <td>{{ withdrawal_id }}</td>
+                <td>{{ employee_id }}</td>
+                <td>{{ withdrawal_amount }}</td>
+                <td>{{ withdrawal_type }}</td>
+                {{#if delivered}}
+                <td>
+                    <i class="fas fa-check"></i>
+                </td>
+                {{else}}
+                <td>
+                    <i class="fas fa-times"></i>
+                </td>
+                {{/if}}
+                <td>{{ campaign_id }}</td>
+                <td>{{ work_id }}</td>
+                <td>{{ withdrawal_date }}</td>
+                <td>{{ withdrawal_description }}</td>
+                <td> <a href="/withdrawal/edit/{{withdrawal_id}}"> Modificar </a> </td>
+                <td> <a href="/withdrawal/delete/{{withdrawal_id}}"> Eliminar </a> </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Emplado</th>
+                <th>Cantidad</th>
+                <th>Tipo</th>
+                <th>Entregado</th>
+                <th>Campaña</th>
+                <th>Trabajo</th>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#listdata').DataTable({
+            language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    exportOptions: {
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+                }
+                ,
+                {
+                    extend: 'csv',
+                    text: 'Exportar a CSV',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+                ,
+                {
+                    extend: 'print',
+                    text: 'Imprimir pagina corriente',
+                    messageBottom: '\n Impreso en fecha: {{date}}',
+                    //messageTop: '',
+                    //  orientation: 'landscape',
+                    // pageSize: 'A4',
+                    title: '{{tagExport}}',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text: 'Mostrar/Ocultar Columnas'
+                }
+
+            ]
+        });
+    });
+</script>

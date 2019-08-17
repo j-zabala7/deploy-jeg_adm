@@ -1,0 +1,17 @@
+{{!-- para utilizar la imagen se crea un layout y luego se usa desde css --}}
+
+<main class="index"> {{!-- contenido principal con clase index para estilizar la imagen --}}
+    <header class="masthead d-flex"> {{!--titulo dentro de contenedor centrado... con clase masterhead y d-flex(display-flex:de boostrap para utilizar flexbox )--}}
+        <div class="container text-center my-auto"> {{!-- container para centrar el contenido y el texto...my-auto(margin y) centrado de manera vertical --}}
+            <h1 class="mb-1"> {{!--titulo..mb-1:para que se separe con lo de abajo--}}
+                Software de Administracion
+            </h1>
+            <h3 class="mb-5"> {{!--mb-5: tmb para que se separe del enlace de abajo--}}
+                <em>Utilizar la aplicacion</em> {{!-- emfasis de palabra, sino usar  strong  --}}
+            </h3>
+            <a href="/signin" class="btn btn-primary"> {{!-- enlace a --}}
+                Empezemos.
+            </a>
+        </div>
+    </header>
+</main>

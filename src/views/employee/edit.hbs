@@ -1,0 +1,132 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/employee/edit/{{employee.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nombre:</label>
+                            <input type="text" value="{{employee.name}}" class="form-control" name="name"
+                                placeholder="Nombre" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="dni">DNI:</label>
+                            <div class="hidden" id="loaderDniDiv">
+                                <div id="loaderDni" class="loader"></div>
+                                <div id="textDni"> Verificando DNI...</div>
+                            </div>
+                            <input type="text" value="{{employee.dni}}" id="dni" class="form-control" name="dni"
+                                placeholder="DNI">
+                        </div>
+
+                        <div class="col-sm-20 col-sm-offset-3 hidden" id="dniCheck">
+                            <div class="alert alert-info" id="dniCheckLabel"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cuil">Cuil:</label>
+                            <div class="hidden" id="loaderCuilDiv">
+                                <div id="loaderCuil" class="loader"></div>
+                                <div id="textCuil"> Verificando Cuil...</div>
+                            </div>
+                            <input type="text" value="{{employee.cuil}}" id="cuil" class="form-control" name="cuil"
+                                placeholder="Cuil">
+                        </div>
+
+                        <div class="col-sm-20 col-sm-offset-3 hidden" id="cuilCheck">
+                            <div class="alert alert-info" id="cuilCheckLabel"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addr">Dirección:</label>
+                            <input type="text" value="{{employee.addr}}" class="form-control" name="addr"
+                                placeholder="Dirección">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefono:</label>
+                            <input type="text" value="{{employee.phone}}" class="form-control" name="phone"
+                                placeholder="Telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo:</label>
+                            <input type="email" value="{{employee.email}}" class="form-control" name="email"
+                                placeholder="Correo Electronico">
+                        </div>
+                        <div class="form-group">
+                            <label for="birthday">Fecha de Nacimiento:</label>
+                            <input type="date" value="{{employee.birthday}}" class="form-control" name="birthday"
+                                placeholder="Fecha de Nacimiento">
+                        </div>
+
+                        <div class="form-group">
+                            <button name="submit" id="submit" class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                            <a href="/employee/" class="btn btn-success btn-block"> Cancelar </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    $('#dni').focusout(function () {
+        $('#loaderDniDiv').removeClass("hidden");
+        const dni = $('#dni').val();
+        //alert(dni);
+        //                 $("#message").html("<img src='images/loader.gif' /> checking...");
+
+        checkDniExist(dni);
+    });
+
+    function checkDniExist(dni) {
+        //  alert('checkDniExist');
+        //  alert(dni);
+        $.post("/employee/checkDni", { dni: dni }, function (data) {
+            const result = data.result;
+            //  alert(result);
+            if (result == false) {
+                $('#dniCheck').slideDown("slow");
+                $('#dniCheckLabel').text("Ya existe un Emplado con ese DNI!");
+                $('#dniCheck').removeClass('hidden');
+                $('#loaderDniDiv').addClass("hidden");
+            } else {
+                $('#dniCheck').slideUp("slow");
+                $('#dniCheck').addClass('hidden');
+                $('#submit').prop("disabled", false);
+                $('#loaderDniDiv').addClass("hidden");
+            }
+        })
+    };
+
+    $('#cuil').focusout(function () {
+        $('#loaderCuilDiv').removeClass("hidden");
+        const cuil = $('#cuil').val();
+        //alert(cuil);
+        checkCuilExist(cuil);
+    });
+
+    function checkCuilExist(cuil) {
+        //alert('checkCuilExist');
+        //alert(cuil);
+        $.post("/employee/checkCuil", { cuil: cuil }, function (data) {
+            const result = data.result;
+            //  alert(result);
+            if (result == false) {
+                $('#cuilCheck').slideDown("slow");
+                $('#cuilCheckLabel').text("Ya existe un Emplado con ese CUIL!");
+                $('#cuilCheck').removeClass('hidden');
+                $('#loaderCuilDiv').addClass("hidden");
+            } else {
+                $('#cuilCheck').slideUp("slow");
+                $('#cuilCheck').addClass('hidden');
+                $('#submit').prop("disabled", false);
+                $('#loaderCuilDiv').addClass("hidden");
+            }
+        })
+    };
+
+</script>

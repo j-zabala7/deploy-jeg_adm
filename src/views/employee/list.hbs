@@ -1,0 +1,137 @@
+<br>
+<br>
+<div class="container p-2">
+    <div class="row">
+        <div class="col-md-2  mx-auto">
+            <div class="card">
+                <a class="btn btn-primary" href="/employee/add" role="button">Agregar!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="div">
+    <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Cuil</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each employees}}
+            <tr>
+                <td>{{ employee_id }}</td>
+                <td>{{ employee_dni }}</td>
+                <td>{{ employee_name }}</td>
+                <td>{{ employee_cuil }}</td>
+                <td>{{ employee_birthday }}</td>
+                <td>{{ employee_addr }}</td>
+                <td>{{ employee_phone }}</td>
+                <td>{{ employee_email }}</td>
+                <td> <a href="/employee/edit/{{employee_id}}"> Modificar </a> </td>
+                <td> <a href="/employee/delete/{{employee_id}}"> Eliminar </a> </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Cuil</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#listdata').DataTable({
+            language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    exportOptions: {
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+                }
+                ,
+                {
+                    extend: 'csv',
+                    text: 'Exportar a CSV',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+                ,
+                {
+                    extend: 'print',
+                    text: 'Imprimir pagina corriente',
+                    messageBottom: '\n Impreso en fecha: {{date}}',
+                    //messageTop: '',
+                    //  orientation: 'landscape',
+                    // pageSize: 'A4',
+                    title: '{{tagExport}}',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text: 'Mostrar/Ocultar Columnas'
+                }
+
+            ]
+        });
+    });
+</script>

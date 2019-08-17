@@ -1,0 +1,35 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/clients/add" method="POST">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="name" placeholder="Nombre" value="{{datos.client_name}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="dni" placeholder="DNI" value="{{datos.client_dni}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="cuitcuil" placeholder="Cuil/Cuit" value="{{datos.cuilcuit}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="addr" placeholder="Dirección" value={{datos.addr}} autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="phone" placeholder="Telefono" value="{{datos.phone}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" name="email" placeholder="Correo Electronico" value="{{datos.email}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

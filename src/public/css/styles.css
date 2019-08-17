@@ -1,0 +1,132 @@
+body{
+    background: #f5f6f5;
+    font-family: 'Oswald', sans-serif;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
+
+}
+/* body de toda mi app tendra un color, una letra(fuente Oswald, en caso contrario sans-serif) y colocar el contenedor flotando al centro de la app(overflow hidden) */
+.index{
+    width: 100vw; /*ancho total del dispositivo(vw)*/
+    height: 100vh; /*alto total del disp(vh)*/
+}
+/* estilizo la clase index que usa index.hbs
+*/
+.masthead{
+    color: white; /* color blanco al texto */
+    min-height: 30rem; /*alto minimo*/
+    width: 100%; /*ancho*/
+    height: 100%; /*altura*/
+    padding-top: 8rem; /**/
+    background: url('/img/background.jpg'); /*imagen*/
+    background-position: center center; /*posicion vert y horiz*/
+    background-repeat: no-repeat; /*que no se repita , ocupe todo*/
+    background-size: cover;    /**/
+}
+/* estilizo lo que esta adentro de la clase index 
+    pongo la imagen
+*/
+
+.masthead h1{
+    font-size: 4rem;
+    margin: 0;
+    padding: 0;
+}
+/*estilizo lo que esta dentro de masthead con h1(h1 dentro de masthead)*/
+@media(min-width:992px) {
+    .masthead h1{
+        font-size: 5.5rem;
+    }
+}
+/*media es para hacer responsive el diseño
+    cuando el min-with sea ese tamaño
+    desde masthead en su h1 su font size cambia
+*/
+
+
+.hidden{
+    display: none;
+}
+
+.loadersmall {
+    border: 5px solid #f3f3f3;
+        border-top-color: rgb(243, 243, 243);
+        border-top-style: solid;
+        border-top-width: 5px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    border-top: 5px solid #555;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.loader {
+    border: 3px solid #f3f3f3; /* Light grey */
+    border-top: 3px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+#loaderDniDiv {
+    text-align: center;
+}
+#loaderDniDiv > div {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#loaderCuilDiv {
+    text-align: center;
+}
+#loaderCuilDiv > div {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#tableContainer {
+  /*  overflow-x: hidden;
+    overflow-y: hidden;
+    overflow: unset;
+    position: initial;
+    -webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+
+    overflow: unset;
+
+    */
+    /*  original
+     margin: 4px;
+    position: fixed;
+    left: auto;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    */
+    margin: 5px;
+    position: absolute;
+    left: auto;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+   
+    
+}
+
+div.dataTables_wrapper {
+    width: auto; /*ancho*/
+    height: auto; /*altura*/
+    padding-left: 2px;
+    padding-right: 2px;
+}
+

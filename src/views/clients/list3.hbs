@@ -1,0 +1,49 @@
+<div class="container p-4">
+<div class="row">
+    {{#each datos}}
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                     <a href="clients/modify?id={{client_id}}">
+                        <h3 class="card-title text-uppercase">
+                            {{#if client_dni}}
+                                {{client_dni}}
+                            {{else}}
+                                {{cuil_cuit}}
+                            {{/if}}
+                        </h3>
+                     </a>
+                     {{!-- <p>ID:</p>
+                     <p class="m-2">{{client_id}}</p> 
+                     <p>DNI:</p>
+                     <p class="m-2">{{client_dni}}</p> --}}
+                     <b>Nombre:</b>
+                     <p class="m-2">{{client_name}}</p>
+                     {{#if  client_dni}}
+                            {{#if cuil_cuit}}
+                                <b>Cuil:</b>
+                            {{/if}}
+                     {{else}}
+                             {{#if cuil_cuit}}
+                                <b>Cuit:</b>
+                            {{/if}}
+                     {{/if}}  
+                     <p class="m-2"> {{cuil_cuit}} </p>
+                     <br>
+                     <a href="/clients/delete/{{client_id}}" class="btn btn-danger">Eliminar</a>
+                     <a href="/clients/edit/{{client_id}}" class="btn btn-secondary">Modificar</a>
+                   
+                </div>
+            </div>
+            <br>
+        </div>
+    {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay Clientes cargados aun.</p>
+                <a href="/clients/add">Cargar uno!</a>
+            </div>
+        </div>
+    {{/each}}
+</div>
+</div>

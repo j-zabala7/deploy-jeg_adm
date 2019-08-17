@@ -1,0 +1,83 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/countryside/edit/{{countryside.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nombre:</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Nombre"
+                                value="{{countryside.name}}" autofocus>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Localización:</label>
+                            <input type="text" class="form-control" id="location" name="location"
+                                placeholder="Localización" value="{{countryside.location}}">
+                            {{!--min="2018-03" value="2018-05"--}}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ha">HA:</label>
+                            <input type="text" class="form-control" id="ha" name="ha" placeholder="HA"
+                                value="{{countryside.ha}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="c_id_select">Cliente:</label>
+                            <select name="c_id_select" id="c_id_select" name="c_id_select"
+                                class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Cliente. </option>
+                                {{#each clients}}
+                                <option value={{client_id}}>{{ client_id }} - {{client_name}} </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                            <button class="btn btn-success btn-block" onclick="history.go(-1)">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- 
+{{ ifEqual transaction.transactionType "expense" "selected" "" }}
+ 
+ window.history.back() ---
+ 
+ --}}
+
+<script language="javascript" type="text/javascript">
+    //onclick="javascript: selectedOption({{c_id}});"
+    /*  function selectedOption(idCampo) {
+          alert("sendCampo");
+          // alert("--------------------------" + idCampo);
+  
+          var i, element = 0;
+          alert("lenght :" + document.getElementById("c_id_select").options.length);
+          //var lenght = document.getElementById("c_id_select").options.length;
+          document.getElementById("c_id_select").value = idCampo;
+  
+          //   document.getElementById("lote_select").options[1] = new Option(text, value, false, false);
+  
+      };*/
+
+    function SetSelectedOption() {
+        const id = "{{c_id}}";
+        document.getElementById("c_id_select").value = id;
+
+        // alert("SetSelectedOption is : "+id);
+
+
+    }
+    $(document).ready(SetSelectedOption);
+</script>

@@ -1,0 +1,128 @@
+<br>
+<br>
+<div class="container p-2">
+    <div class="row">
+        <div class="col-md-2  mx-auto">
+            <div class="card">
+                <a class="btn btn-primary" href="/campaign/add" role="button">Agregar!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="div">
+    <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha Comienzo</th>
+                <th>Fecha Fin</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each datos}}
+            <tr>
+                <td>{{ campaign_id }}</td>
+                <td>{{ campaign_name }}</td>
+                <td>{{ campaign_date_start }}</td>
+                <td>{{ campaign_date_end }}</td>
+                <td>{{ campaign_description }}</td>
+                <td> <a href="/campaign/edit/{{campaign_id}}"> Modificar </a> </td>
+                <td> <a href="/campaign/delete/{{campaign_id}}"> Eliminar </a> </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha Comienzo</th>
+                <th>Fecha Fin</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#listdata').DataTable({
+            language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    exportOptions: {
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+                }
+                ,
+                {
+                    extend: 'csv',
+                    text: 'Exportar a CSV',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+                ,
+                {
+                    extend: 'print',
+                    text: 'Imprimir pagina corriente',
+                    messageBottom: '\n Impreso en fecha: {{date}}',
+                    //messageTop: '',
+                    //  orientation: 'landscape',
+                    // pageSize: 'A4',
+                    title: '{{tagExport}}',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text: 'Mostrar/Ocultar Columnas'
+                }
+
+            ]
+        });
+    });
+</script>

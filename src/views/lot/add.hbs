@@ -1,0 +1,45 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/lot/add" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nombre:</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Nombre"
+                                autofocus>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ha">HA:</label>
+                            <input type="text" id="ha" class="form-control" name="ha" placeholder="HA">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cs_id">Campo:</label>
+                            <select name="cs_id" id="cs_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Campo. </option>
+                                {{#each countrysides}}
+                                <option value={{ countryside_id }}>{{ countryside_id }} - {{ countryside_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción:</label>
+                            <input type="text" id="description" class="form-control" name="description"
+                                placeholder="Descripción">
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Software Administrador</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        {{#if user}} {{!-- si el usr esta logueado se muentran pestañas sino otras --}}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-address-book"></i>
+            Clientes
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/clients/list">Listado</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/clients/add">Agregar</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-people-carry"></i>
+            Empleados
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/employee/list">Listado</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/employee/add">Agregar</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/withdrawal/add">Agregar Retiro</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/withdrawal/">Listado Retiros</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/at_work/">Trabajos Asignados</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/at_work/add">Asignar Trabajo</a>
+
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-briefcase"></i>
+            Campañas
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/campaign/">Listado</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/campaign/add">Agregar</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/work/add">Agregar Trabajo</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/work/">Listar Trabajos</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/expense/add">Agregar Gasto</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/expense/">Listar Gastos</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fab fa-pagelines"></i>
+            Campos
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/countryside/">Listado</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/countryside/add">Agregar</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/lot/">Listar lotes</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/lot/add">Cargar lote</a>
+          </div>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a href="/profile" class="nav-link"><i class="fas fa-id-card"></i>Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a href="/logout" class="nav-link"><i class="fas fa-power-off"></i>Cerrar Sesion</a>
+        </li>
+        {{else}}
+        <li class="nav-item">
+          <a href="/signin" class="nav-link"><i class="fas fa-user-circle"></i>Iniciar Sesion</a>
+        </li>
+        <li class="nav-item">
+          <a href="/signup" class="nav-link"><i class="fas fa-user-plus"></i>Registrarse</a>
+        </li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</nav>
