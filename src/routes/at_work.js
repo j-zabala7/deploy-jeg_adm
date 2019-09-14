@@ -9,7 +9,7 @@ const at_Work = require('../models/at_work').at_work;
 const { isLoggedIn } = require('../lib/auth'); // importamos metodos para proteger rutas
 
 router.get('/', isLoggedIn, async (req, res) => {
-    const at_works = await pool.query("select * from jeg_adm.at_work").catch((e) => { console.log("-------------router AT_WORK-------------------"); console.error(e) });
+    const at_works = await pool.query("select at_work_id, at_w.employee_id, at_w.work_id, at_work_pricexha, total, at_work_description, at_w.campaign_id, at_work_currency, employee_name, type, has, campaign_name from jeg_adm.at_work at_w left join (select employee_id, employee_name from jeg_adm.employee) emp on (emp.employee_id = at_w.employee_id) left join (select campaign_id, campaign_name from jeg_adm.campaign) camp on (camp.campaign_id = at_w.campaign_id) left join (select work_id, type from jeg_adm.work) w on (w.work_id = at_w.work_id);").catch((e) => { console.log("-------------router AT_WORK-------------------"); console.error(e) });
     var date = new Date();
     console.log(at_works.rows);
 
@@ -25,8 +25,8 @@ router.get('/add', isLoggedIn, async (req, res) => {
 });
 
 router.post('/add', isLoggedIn, async (req, res) => {
-    const { emp_id, camp_id, price, description, work_id, ha, total } = req.body;
-    const at_work = new at_Work(null, emp_id, ha, price, total, work_id, camp_id, description);
+    const { emp_id, camp_id, price, description, work_id, ha, total, currency } = req.body;
+    const at_work = new at_Work(null, emp_id, ha, price, total, work_id, camp_id, description, currency);
     at_work.show();
 
     await at_work.makePersistent().catch((e) => {
@@ -42,7 +42,7 @@ router.post('/add', isLoggedIn, async (req, res) => {
 router.get('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     console.log('edit id :' + id);
-    const at_work = new at_Work(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const at_work = new at_Work(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     await at_work.pullData();
     console.log("despues de pullData");
     console.log(at_work.work);
@@ -68,9 +68,9 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    const { camp_id, emp_id, price, ha, total, description, work_id } = req.body;
+    const { camp_id, emp_id, price, ha, total, description, work_id, currency } = req.body;
 
-    const at_work = new at_Work(id, emp_id, ha, price, total, work_id, camp_id, description);
+    const at_work = new at_Work(id, emp_id, ha, price, total, work_id, camp_id, description, currency);
     at_work.show();
     await at_work.updateData();
 
@@ -81,7 +81,7 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
 router.get('/delete/:id', isLoggedIn, async (req, res) => {
 
     const { id } = req.params;
-    const at_work = new at_Work(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const at_work = new at_Work(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
     await at_work.delete().catch((e) => {
         console.log("-------------------at work /delete -------------------");

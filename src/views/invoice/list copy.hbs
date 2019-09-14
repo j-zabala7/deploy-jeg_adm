@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-2  mx-auto">
             <div class="card">
-                <a class="btn btn-primary" href="/withdrawal/add" role="button">Agregar!</a>
+                <a class="btn btn-primary" href="/invoice/add" role="button">Agregar!</a>
             </div>
         </div>
     </div>
@@ -18,56 +18,96 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Emplado</th>
-                <th>Cantidad</th>
-                <th>Moneda</th>
-                <th>Tipo</th>
-                <th>Entregado</th>
-                <th>Campaña</th>
-                <th>Trabajo</th>
+                <th>Cliente</th>
                 <th>Fecha</th>
+                <th>Estado</th>
                 <th>Descripción</th>
+                <th>Moneda</th>
+                <th>IVA</th>
+                <th>Subtotal</th>
+                <th>Total</th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            {{#each withdrawals}}
+            {{#each invoices}}
             <tr>
-                <td>{{ withdrawal_id }}</td>
-                <td> <a href="/employee/details/{{employee_id}}"> {{ employee_id }} - {{ employee_name }} </a> </td>
-                <td>{{ withdrawal_amount }}</td>
-                <td>{{ withdrawal_currency }}</td>
-                <td>{{ withdrawal_type }}</td>
-                {{#if delivered}}
-                <td>
-                    <i class="fas fa-check"></i>
-                </td>
-                {{else}}
-                <td>
-                    <i class="fas fa-times"></i>
-                </td>
-                {{/if}}
-                <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
-                <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
-                <td>{{ withdrawal_date }}</td>
-                <td>{{ withdrawal_description }}</td>
-                <td> <a href="/withdrawal/edit/{{withdrawal_id}}"> Modificar </a> </td>
-                <td> <a href="/withdrawal/delete/{{withdrawal_id}}"> Eliminar </a> </td>
+                <td>{{ invoice_id }}</td>
+                <td>{{ client_id }}</td>
+                <td>{{ invoice_date }}</td>
+                <td>{{ invoice_state }}</td>
+                <td>{{ invoice_description }}</td>
+                <td>{{ invoice_currency }}</td>
+                <td>{{ iva_id }} </td>
+                <td>{{ subtotal_amount }}</td>
+                <td>{{ total_amount }}</td>
+                <td> <a href="/invoice/edit/{{invoice_id}}"> Modificar </a> </td>
+                <td> <a href="/invoice/delete/{{invoice_id}}"> Eliminar </a> </td>
             </tr>
             {{/each}}
         </tbody>
         <tfoot>
             <tr>
                 <th>ID</th>
-                <th>Emplado</th>
-                <th>Cantidad</th>
-                <th>Moneda</th>
-                <th>Tipo</th>
-                <th>Entregado</th>
-                <th>Campaña</th>
-                <th>Trabajo</th>
+                <th>Cliente</th>
                 <th>Fecha</th>
+                <th>Estado</th>
+                <th>Descripción</th>
+                <th>Moneda</th>
+                <th>IVA</th>
+                <th>Subtotal</th>
+                <th>Total</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+<div id="tableContainerInvoice" class="div hidden">
+    <b>Lineas Facturadas:</b>
+    <table id="invoice_line" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Trabajo</th>
+                <th>Hectareas Facturadas</th>
+                <th>Hectareas Totales</th>
+                <th>Moneda</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each invoices}}
+            <tr>
+                <td>{{ invoice_id }}</td>
+                <td>{{ client_id }}</td>
+                <td>{{ invoice_date }}</td>
+                <td>{{ invoice_state }}</td>
+                <td>{{ invoice_description }}</td>
+                <td>{{ invoice_currency }}</td>
+                <td>{{ iva_id }}</td>
+                <td>{{ subtotal_amount }}</td>
+                <td>{{ total_amount }}</td>
+                <td> <a href="/invoice_line/edit/{{invoice_line_id}}"> Modificar </a> </td>
+                <td> <a href="/invoice_line/delete/{{invoice_line_id}}"> Eliminar </a> </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Trabajo</th>
+                <th>Hectareas Facturadas</th>
+                <th>Hectareas Totales</th>
+                <th>Moneda</th>
+                <th>Monto</th>
                 <th>Descripción</th>
                 <th></th>
                 <th></th>
@@ -76,7 +116,19 @@
     </table>
 </div>
 
+
 <script type="text/javascript">
+    function valueOfIva(id_iva) {
+        alert('funcion');
+        { { ivas } }.forEach(element => {
+            alert(element);
+            if (element.iva_id == id_iva {
+                return (element.iva_value + " - " element.iva_descripcion );
+    } 
+        });
+
+    }
+
     $(document).ready(function () {
         $('#listdata').DataTable({
             language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },

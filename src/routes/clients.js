@@ -78,4 +78,14 @@ router.get('/delete/:id', isLoggedIn, async (req, res) => {
     res.redirect('/clients/list');
 });
 
+router.get('/details/:id', isLoggedIn, async (req, res) => {
+    const { id } = req.params;
+    const client = new Client(undefined, undefined, undefined, undefined, id, undefined, undefined);
+    client.show();
+    await client.pullData(2);
+    client.show();
+
+    res.render('clients/details', { client: client });
+});
+
 module.exports = router;

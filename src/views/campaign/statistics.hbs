@@ -1,76 +1,38 @@
 <br>
 <br>
-<div class="container p-2">
-    <div class="row">
-        <div class="col-md-2  mx-auto">
-            <div class="card">
-                <a class="btn btn-primary" href="/withdrawal/add" role="button">Agregar!</a>
-            </div>
-        </div>
-    </div>
-</div>
 
-<br>
-<br>
-
-<div id="tableContainer" class="div">
+<div class="div">
     <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Emplado</th>
-                <th>Cantidad</th>
-                <th>Moneda</th>
-                <th>Tipo</th>
-                <th>Entregado</th>
-                <th>Campaña</th>
-                <th>Trabajo</th>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th></th>
-                <th></th>
+                <th>ID Campaña</th>
+                <th>Nombre campaña</th>
+                <th>Ganancias Totales</th>
+                <th>Hectareas Totales</th>
+                <th>Ganancias Facturadas</th>
+                <th>Hectareas Facturadas</th>
             </tr>
         </thead>
         <tbody>
-            {{#each withdrawals}}
+            {{#each statistics}}
             <tr>
-                <td>{{ withdrawal_id }}</td>
-                <td> <a href="/employee/details/{{employee_id}}"> {{ employee_id }} - {{ employee_name }} </a> </td>
-                <td>{{ withdrawal_amount }}</td>
-                <td>{{ withdrawal_currency }}</td>
-                <td>{{ withdrawal_type }}</td>
-                {{#if delivered}}
-                <td>
-                    <i class="fas fa-check"></i>
-                </td>
-                {{else}}
-                <td>
-                    <i class="fas fa-times"></i>
-                </td>
-                {{/if}}
-                <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
-                <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
-                <td>{{ withdrawal_date }}</td>
-                <td>{{ withdrawal_description }}</td>
-                <td> <a href="/withdrawal/edit/{{withdrawal_id}}"> Modificar </a> </td>
-                <td> <a href="/withdrawal/delete/{{withdrawal_id}}"> Eliminar </a> </td>
+                <td>{{ campaign_id }}</td>
+                <td>{{ campaign_name }}</td>
+                <td>{{ total_gain }}</td>
+                <td>{{ total_has }}</td>
+                <td>{{ total_invoiced }}</td>
+                <td>{{ invoiced_has }}</td>
             </tr>
             {{/each}}
         </tbody>
         <tfoot>
             <tr>
-                <th>ID</th>
-                <th>Emplado</th>
-                <th>Cantidad</th>
-                <th>Moneda</th>
-                <th>Tipo</th>
-                <th>Entregado</th>
-                <th>Campaña</th>
-                <th>Trabajo</th>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th></th>
-                <th></th>
+                <th>ID Campaña</th>
+                <th>Nombre campaña</th>
+                <th>Ganancias Totales</th>
+                <th>Hectareas Totales</th>
+                <th>Ganancias Facturadas</th>
+                <th>Hectareas Facturadas</th>
             </tr>
         </tfoot>
     </table>

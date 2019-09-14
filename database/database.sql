@@ -86,6 +86,7 @@ create table at_work(
 	total double precision,
 	at_work_description varchar(200),
 	campaign_id int,
+	at_work_currency varchar(50),
 	constraint pk_at_work primary key(at_work_id),
 	constraint fk_at_work_employee foreign key (employee_id) references employee(employee_id),
 	constraint fk_at_work_work foreign key (work_id) references work(work_id),
@@ -102,6 +103,7 @@ create table expenses(
 	--ver si falta una fecha de vencimiento
 	campaign_id int,
 	work_id int,
+	expenses_currency varchar(50),
 	constraint pk_expenses primary key(expenses_id),
 	constraint fk_expenses_campaign foreign key (campaign_id) references campaign(campaign_id),
 	constraint fk_expenses_work foreign key (work_id) references work(work_id)
@@ -118,11 +120,52 @@ create table withdrawal(
 	work_id int,
 	withdrawal_description varchar(200),
 	--signature varchar(20),
+	withdrawal_currency varchar(50),
 	constraint pk_withdrawal primary key(withdrawal_id),
 	constraint fk_withdrawal_employee foreign key (employee_id) references employee(employee_id),
 	constraint fk_withdrawal_campaign foreign key (campaign_id) references campaign(campaign_id),
 	constraint fk_withdrawal_work foreign key (work_id) references work(work_id)
 		--ver campaing id y work id
+);
+
+create table jeg_adm.iva (
+	iva_id serial,
+	iva_value double precision,
+	iva_rate double precision,
+	iva_description varchar(200),
+	constraint pk_iva primary key(iva_id)
+);
+
+create table jeg_adm.invoice (
+	invoice_id serial,
+	client_id int,
+	invoice_date date,
+	subtotal_amount double precision,
+	total_amount double precision,
+	invoice_description varchar(200),
+	invoice_currency varchar(50),
+	iva_id int,
+	invoice_state varchar(100),
+	invoice_type varchar(50),
+	invoice_nro int CONSTRAINT invoice_unique_nro UNIQUE,
+	constraint pk_invoice primary key(invoice_id),
+	constraint fk_invoice_client foreign key (client_id) references jeg_adm.client(client_id),
+	constraint fk_invoice_iva foreign key (iva_id) references jeg_adm.iva(iva_id)
+);
+
+create table jeg_adm.invoice_line (
+	invoice_line_id serial,
+	invoice_id int,
+	work_id int,
+	invoiced_ha double precision,
+	total_ha double precision,
+	amount_invoice_line double precision,
+	invoice_line_description varchar(200),
+	invoice_line_currency varchar(50),
+	invoice_line_pricexha double precision,
+	constraint pk_invoice_line primary key(invoice_line_id),
+	constraint fk_invoice_line_invoice foreign key (invoice_id) references jeg_adm.invoice(invoice_id),
+	constraint fk_invoice_line_work foreign key (work_id) references jeg_adm.work(work_id)
 );
 
 CREATE TABLE "session" ( --tabla para sesiones ... sacada de node_modules/connect-pg-simple/table.sql 
@@ -140,3 +183,105 @@ create table jeg_adm.user(
 	fullname varchar(100),
 	constraint pk_user primary key(user_id)
 );
+
+
+-- triggers to update the invoice total.
+/*
+create or replace function function_update_invoice() returns trigger as
+$$
+DECLARE 
+id integer;
+total double precision;
+iva double precision;
+BEGIN
+select invoice_id, sum(amount_invoice_line) as total into id, total from (select invoice_id,amount_invoice_line from jeg_adm.invoice_line where invoice_id = new.invoice_id ) inv group by invoice_id;
+update jeg_adm.invoice set subtotal_amount=total where invoice_id=id;
+select iva_rate into iva from ((select invoice_id, iva_id from jeg_adm.invoice where invoice_id=id) inv natural join (select iva_id, iva_rate from jeg_adm.iva) iva);
+update jeg_adm.invoice set total_amount=(subtotal_amount*iva) where invoice_id=id;
+return new;
+END;$$
+LANGUAGE 'plpgsql';
+
+
+create trigger trigger_update_invoice 
+after update on jeg_adm.invoice_line 
+FOR EACH ROW
+EXECUTE PROCEDURE function_update_invoice();
+
+create or replace function function_delete_invoice() returns trigger as
+$$
+DECLARE 
+id integer;
+total double precision;
+iva double precision;
+BEGIN
+select invoice_id, sum(amount_invoice_line) as total into id, total from (select invoice_id,amount_invoice_line from jeg_adm.invoice_line where invoice_id = old.invoice_id ) inv group by invoice_id;
+update jeg_adm.invoice set subtotal_amount=total where invoice_id=id;
+select iva_rate into iva from ((select invoice_id, iva_id from jeg_adm.invoice where invoice_id=id) inv natural join (select iva_id, iva_rate from jeg_adm.iva) iva);
+update jeg_adm.invoice set total_amount=(subtotal_amount*iva) where invoice_id=id;
+return new;
+END;$$
+LANGUAGE 'plpgsql';
+
+
+create  trigger jeg_adm.trigger_delete_invoice
+after delete on jeg_adm.invoice_line
+for EACH ROW
+EXECUTE PROCEDURE function_delete_invoice();
+
+create trigger jeg_adm.trigger_insert_invoice
+after insert on jeg_adm.invoice_line
+for EACH ROW
+EXECUTE PROCEDURE function_update_invoice();
+*/
+
+
+set search_path = jeg_adm;
+
+create or replace function function_update_invoice() returns trigger as
+$$
+DECLARE 
+id integer;
+total double precision;
+iva double precision;
+BEGIN
+select invoice_id, sum(amount_invoice_line) as total into id, total from (select invoice_id,amount_invoice_line from jeg_adm.invoice_line where invoice_id = new.invoice_id ) inv group by invoice_id;
+update jeg_adm.invoice set subtotal_amount=total where invoice_id=id;
+select iva_rate into iva from ((select invoice_id, iva_id from jeg_adm.invoice where invoice_id=id) inv natural join (select iva_id, iva_rate from jeg_adm.iva) iva);
+update jeg_adm.invoice set total_amount=(subtotal_amount*iva) where invoice_id=id;
+return new;
+END;$$
+LANGUAGE 'plpgsql';
+
+
+create trigger trigger_update_invoice 
+after update on jeg_adm.invoice_line 
+FOR EACH ROW
+EXECUTE PROCEDURE jeg_adm.function_update_invoice();
+
+create or replace function jeg_adm.function_delete_invoice() returns trigger as
+$$
+DECLARE 
+id integer;
+total double precision;
+iva double precision;
+BEGIN
+select invoice_id, sum(amount_invoice_line) as total into id, total from (select invoice_id,amount_invoice_line from jeg_adm.invoice_line where invoice_id = old.invoice_id ) inv group by invoice_id;
+update jeg_adm.invoice set subtotal_amount=total where invoice_id=id;
+select iva_rate into iva from ((select invoice_id, iva_id from jeg_adm.invoice where invoice_id=id) inv natural join (select iva_id, iva_rate from jeg_adm.iva) iva);
+update jeg_adm.invoice set total_amount=(subtotal_amount*iva) where invoice_id=id;
+return new;
+END;$$
+LANGUAGE 'plpgsql';
+
+
+create  trigger trigger_delete_invoice
+after delete on jeg_adm.invoice_line
+for EACH ROW
+EXECUTE PROCEDURE jeg_adm.function_delete_invoice();
+
+create trigger trigger_insert_invoice
+after insert on jeg_adm.invoice_line
+for EACH ROW
+EXECUTE PROCEDURE jeg_adm.function_update_invoice();
+

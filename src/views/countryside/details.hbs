@@ -6,26 +6,26 @@
                     <form action="/countryside/edit/{{countryside.id}}" method="POST">
                         <div class="form-group">
                             <label for="name">Nombre:</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Nombre"
+                            <input type="text" readonly class="form-control" id="name" name="name" placeholder="Nombre"
                                 value="{{countryside.name}}" autofocus>
 
                         </div>
                         <div class="form-group">
                             <label for="location">Localización:</label>
-                            <input type="text" class="form-control" id="location" name="location"
+                            <input type="text" readonly class="form-control" id="location" name="location"
                                 placeholder="Localización" value="{{countryside.location}}">
                             {{!--min="2018-03" value="2018-05"--}}
                         </div>
 
                         <div class="form-group">
                             <label for="ha">HA:</label>
-                            <input type="text" class="form-control" id="ha" name="ha" placeholder="HA"
+                            <input type="text" readonly class="form-control" id="ha" name="ha" placeholder="HA"
                                 value="{{countryside.ha}}">
                         </div>
 
                         <div class="form-group">
                             <label for="c_id_select">Cliente:</label>
-                            <select name="c_id_select" id="c_id_select" name="c_id_select"
+                            <select name="c_id_select" disabled id="c_id_select" name="c_id_select"
                                 class="form-control form-control-lg">
                                 <option value="default"> Seleccione un Cliente. </option>
                                 {{#each clients}}
@@ -35,9 +35,7 @@
                         </div>
 
                         <div class="form-group">
-                            <button class="btn btn-success btn-block">
-                                Guardar
-                            </button>
+                            <a href="/countryside/edit/{{countryside.id}}" class="btn btn-success btn-block"> Modificar </a>
                             <a href="/countryside/" class="btn btn-success btn-block"> Cancelar </a>
                         </div>
                     </form>
@@ -70,7 +68,7 @@
       };*/
 
     function SetSelectedOption() {
-        const id = "{{c_id}}";
+        const id = "{{countryside.id}}";
         document.getElementById("c_id_select").value = id;
 
         // alert("SetSelectedOption is : "+id);

@@ -107,4 +107,14 @@ router.post("/checkCuil", isLoggedIn, async (req, res) => {
     res.json({ result: ((resul.rowCount > 0) ? false : true) });
 });
 
+router.get('/details/:id', isLoggedIn, async (req, res) => {
+    const { id } = req.params;
+
+    const employee = new Employee(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    await employee.pullData(2);
+    employee.show();
+    console.log("employee de pues del show " + id);
+    res.render('employee/details', { employee: employee });
+});
+
 module.exports = router;

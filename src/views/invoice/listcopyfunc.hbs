@@ -1,0 +1,241 @@
+<br>
+<br>
+<div class="container p-2">
+    <div class="row">
+        <div class="col-md-2  mx-auto">
+            <div class="card">
+                <a class="btn btn-primary" href="/invoice/add" role="button">Agregar!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div id="tableContainer" class="div">
+    <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nro de Factura</th>
+                <th>Tipo</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Moneda</th>
+                <th>Subtotal</th>
+                <th>IVA</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each invoices}}
+            <tr>
+                <td>{{ invoice_id }}</td>
+                <td>{{ invoice_nro }}</td>
+                <td>{{ invoice_type }}</td>
+                <td>{{ client_id }}</td>
+                <td>{{ invoice_date }}</td>
+                <td>{{ invoice_currency }}</td>
+                <td>{{ subtotal_amount }}</td>
+                <td>{{ iva_id }}</td>
+                <td>{{ total_amount }}</td>
+                <td>{{ invoice_state }}</td>
+                <td>{{ invoice_description }}</td>
+                <td> <a href="/invoice/edit/{{invoice_id}}"> Modificar </a> </td>
+                <td> <a href="/invoice/delete/{{invoice_id}}"> Eliminar </a> </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Nro de Factura</th>
+                <th>Tipo</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Moneda</th>
+                <th>Subtotal</th>
+                <th>IVA</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Descripción</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="tableContainerInvoiceLine" class="div hidden">
+        <b>Lineas Facturadas:</b> <br>
+        <a id="add_i_l" class="btn btn-primary" href="/invoice/{{id_selected_invoice}}/addline" role="button">Agregar Linea!</a>
+        <table id="invoice_line" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Trabajo</th>
+                    <th>Hectareas Facturadas</th>
+                    <th>Hectareas Totales</th>
+                    <th>Moneda</th>
+                    <th>Monto</th>
+                    <th>Descripción</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Trabajo</th>
+                    <th>Hectareas Facturadas</th>
+                    <th>Hectareas Totales</th>
+                    <th>Moneda</th>
+                    <th>Monto</th>
+                    <th>Descripción</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var id_selected_invoice = 55;
+        const table = $('#listdata').DataTable({
+            language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    exportOptions: {
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+                }
+                ,
+                {
+                    extend: 'csv',
+                    text: 'Exportar a CSV',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+                ,
+                {
+                    extend: 'print',
+                    text: 'Imprimir pagina corriente',
+                    messageBottom: '\n Impreso en fecha: {{date}}',
+                    //messageTop: '',
+                    //  orientation: 'landscape',
+                    // pageSize: 'A4',
+                    title: '{{tagExport}}',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text: 'Mostrar/Ocultar Columnas'
+                }
+
+            ]
+        });
+
+        $('#listdata tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+                $('#tableContainerInvoiceLine').addClass('hidden');
+            }
+            else {
+                $('#tableContainerInvoiceLine').addClass('hidden');
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                var rows = table.rows(this).data();
+                id_selected_invoice = rows[0][0];
+                document.getElementById("add_i_l").href = "/invoice/"+id_selected_invoice+"/addline";
+                //alert(id_selected_invoice);
+                
+                $.post("invoice/"+id_selected_invoice+"/listline", { invoice_id: id_selected_invoice }, function (data) {
+                    var t_invoice_line = $('#invoice_line').DataTable();
+                    alert(data[0].invoice_line_id);
+                    data.forEach(function(element) {
+                        //console.log(element);
+                        t_invoice_line.row.add([
+                            element.invoice_line_id,
+                            element.work_id,
+                            element.invoiced_ha,
+                            element.total_ha,
+                            element.invoice_line_currency,
+                            element.amount_invoice_line,
+                            element.invoice_line_description,
+                            '.8',
+                            '.9'
+                    ]).draw(false);
+                    });
+                    
+                    $('#tableContainerInvoiceLine').removeClass('hidden');
+                })
+
+               // var t_invoice_line = $('#invoice_line').DataTable();
+
+               /* t_invoice_line.row.add([
+                    '.1',
+                    '.2',
+                    '.3',
+                    '.4',
+                    '.5',
+                    '.6',
+                    '.7',
+                    '.8',
+                    '.9'
+                ]).draw(false);
+                $('#tableContainerInvoiceLine').removeClass('hidden');*/
+            }
+            alert(table.row(this).data());
+        });
+
+        $('#button').click(function () {
+            table.row('.selected').remove().draw(false);
+        });
+    });
+
+
+</script>

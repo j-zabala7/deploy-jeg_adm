@@ -50,10 +50,10 @@
                 <td>{{ pricexha }}</td>
                 <td>{{ currency }}</td>
                 <td>{{ work_ha }}</td>
-                <td>{{ campaign_id }}</td>
-                <td>{{ client_id }}</td>
-                <td>{{ countryside_id }}</td>
-                <td>{{ lot_id }}</td>
+                <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
+                <td> <a href="/clients/details/{{client_id}}"> {{ client_id }} - {{ client_name }} </a> </td>
+                <td> <a href="/countryside/details/{{countryside_id}}"> {{ countryside_id }} - {{ countryside_name }} </a> </td>
+                <td> <a href="/lot/details/{{lot_id}}"> {{ lot_id }} - {{lot_name}} </a> </td>
                 <td>{{ cereal }}</td>
                 <td> <a href="/work/edit/{{work_id}}"> Modificar </a> </td>
                 <td> <a href="/work/delete/{{work_id}}"> Eliminar </a> </td>

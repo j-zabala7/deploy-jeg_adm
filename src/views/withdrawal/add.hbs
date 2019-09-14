@@ -5,9 +5,13 @@
                 <div class="card-body">
                     <form action="/withdrawal/add" method="POST">
                         <div class="form-group">
-                            <label for="name">Cantida de dinero:</label>
+                            <label for="amount">Cantida de dinero:</label>
                             <input type="text" class="form-control" id="amount" name="amount" placeholder="Dinero"
                                 autofocus>
+                            <br>
+                            <input type="radio" id="currency" name="currency" value="ARS" checked>
+                            Pesos Arg.
+                            <input type="radio" id="currency" name="currency" value="U$S"> Dolares
                         </div>
 
                         <div class="form-group">

@@ -9,7 +9,7 @@ const Withdrawal = require('../models/withdrawal').withdrawal;
 const { isLoggedIn } = require('../lib/auth'); // importamos metodos para proteger rutas
 
 router.get('/', isLoggedIn, async (req, res) => {
-    const withdrawals = await pool.query("select employee_id, campaign_id, withdrawal_description, withdrawal_id, work_id, delivered, withdrawal_amount, to_char(withdrawal_date, 'DD-MM-YYYY') as withdrawal_date, withdrawal_type from jeg_adm.withdrawal").catch((e) => { console.log("-------------router Withdrawal-------------------"); console.error(e) });
+    const withdrawals = await pool.query("select campaign_name, employee_name, type, withdrawal_currency, w.employee_id, w.campaign_id, withdrawal_description, withdrawal_id, w.work_id, delivered, withdrawal_amount, to_char(withdrawal_date, 'DD-MM-YYYY') as withdrawal_date, withdrawal_type from jeg_adm.withdrawal w left join (select employee_id, employee_name from jeg_adm.employee) emp on (emp.employee_id = w.employee_id) left join (select campaign_id, campaign_name from jeg_adm.campaign) camp on (camp.campaign_id = w.campaign_id) left join (select work_id, type from jeg_adm.work) wk on (wk.work_id =  w.work_id);").catch((e) => { console.log("-------------router Withdrawal-------------------"); console.error(e) });
     var date = new Date();
     console.log(withdrawals.rows);
     withdrawals.rows.forEach(element => {
@@ -33,8 +33,8 @@ router.get('/add', isLoggedIn, async (req, res) => {
 });
 
 router.post('/add', isLoggedIn, async (req, res) => {
-    const { emp_id, camp_id, date, description, work_id, type, amount, delivered } = req.body;
-    const withdrawal = new Withdrawal(null, emp_id, amount, date, type, delivered, camp_id, work_id, description);
+    const { emp_id, camp_id, date, description, work_id, type, amount, delivered, currency } = req.body;
+    const withdrawal = new Withdrawal(null, emp_id, amount, date, type, delivered, camp_id, work_id, description, currency);
     withdrawal.show();
 
     await withdrawal.makePersistent().catch((e) => {
@@ -50,7 +50,7 @@ router.post('/add', isLoggedIn, async (req, res) => {
 router.get('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     console.log('edit id :' + id);
-    const withdrawal = new Withdrawal(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const withdrawal = new Withdrawal(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     await withdrawal.pullData();
     console.log("despues de pullData");
     console.log(withdrawal.date);
@@ -77,9 +77,9 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    const { camp_id, emp_id, type, amount, date, delivered, description, work_id } = req.body;
+    const { camp_id, emp_id, type, amount, date, delivered, description, work_id, currency } = req.body;
 
-    const withdrawal = new Withdrawal(id, emp_id, amount, date, type, delivered, camp_id, work_id, description);
+    const withdrawal = new Withdrawal(id, emp_id, amount, date, type, delivered, camp_id, work_id, description, currency);
     withdrawal.show();
     await withdrawal.updateData();
 

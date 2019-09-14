@@ -8,6 +8,9 @@
                             <label for="name">Cantida de dinero:</label>
                             <input type="text" value="{{withdrawal.amount}}" class="form-control" id="amount"
                                 name="amount" placeholder="Dinero" autofocus>
+                            <br>
+                            <input type="radio" id="currency" name="currency" value="ARS"> Pesos Arg.
+                            <input type="radio" id="currency" name="currency" value="U$S"> Dolares
                         </div>
 
                         <div class="form-group">
@@ -84,12 +87,14 @@
 
 <script language="javascript" type="text/javascript">
     function SetSelectedOption() {
+        const currency = '{{withdrawal.currency}}';
         document.getElementById("emp_id").value = ("{{withdrawal.emp_id}}") ? "{{withdrawal.emp_id}}" : 'default';
         document.getElementById("camp_id").value = ("{{withdrawal.camp_id}}") ? "{{withdrawal.camp_id}}" : 'default';
         document.getElementById("work_id").value = ("{{withdrawal.work_id}}") ? "{{withdrawal.work_id}}" : 'default';
         if ("{{withdrawal.delivered}}" == 'delivered') {
             $("#delivered").prop("checked", true);
         }
+        $("input[name='currency'][value='" + currency + "']").prop("checked", true);
     }
     $(document).ready(SetSelectedOption);
 

@@ -1,0 +1,60 @@
+﻿select lot_name, countryside_name, client_name, campaign_name, work_id, type, work_state, work_description, to_char(start_date, 'DD-MM-YYYY') as start_date, to_char(end_date, 'DD-MM-YYYY') as end_date, pricexha, w_camp_cli_count.lot_id, work_ha, w_camp_cli_count.camp.campaign_id, countryside_id, client_id, cereal, currency from ((((jeg_adm.work w left  join (select campaign_id, campaign_name from jeg_adm.campaign) camp on w.campaign_id = camp.campaign_id) w_camp left join (select client_id, client_name from jeg_adm.client) cli on w_camp.client_id = cli.client_id) w_camp_cli left join (select countryside_id, countryside_name from jeg_adm.countryside) count on w_camp_cli.countryside_id = count.countryside_id) w_camp_cli_count left join (select lot_id, lot_name from jeg_adm.lot) lot on w_camp_cli_count.lot_id = lot.lot_id);
+
+
+SELECT lot_name, 
+countryside_name, 
+client_name, 
+campaign_name, 
+work_id, 
+type, 
+work_state, 
+work_description, 
+to_char(start_date, 'DD-MM-YYYY') as start_date, 
+to_char(end_date, 'DD-MM-YYYY') as end_date, 
+pricexha, 
+w.lot_id, 
+work_ha, 
+w.campaign_id, 
+w.countryside_id, 
+w.client_id, 
+cereal, 
+currency
+FROM jeg_adm.work w
+LEFT JOIN (select campaign_id, campaign_name from jeg_adm.campaign) camp ON (camp.campaign_id = w.campaign_id)
+LEFT JOIN (select client_id, client_name from jeg_adm.client) cli ON (cli.client_id = w.client_id)
+LEFT JOIN (select countryside_id, countryside_name from jeg_adm.countryside) cs ON (cs.countryside_id = w.countryside_id)
+LEFT JOIN (select lot_id, lot_name from jeg_adm.lot) lot ON (lot.lot_id = w.lot_id);
+
+
+select lot_id, lot_name, lot_description, lot_ha, l.countryside_id, countryside_name
+from jeg_adm.lot l
+left join (select countryside_id, countryside_name from jeg_adm.countryside) cs on (cs.countryside_id = l.countryside_id);
+
+select countryside_id, countryside_name, location, countryside_ha, cs.client_id, client_name from jeg_adm.countryside cs left join (select client_id, client_name from jeg_adm.client) cl on (cs.client_id = cl.client_id); 
+
+select campaign_name, type, expenses_currency, made_to, exp.campaign_id, expenses_description, expenses_id, exp.work_id, expenses_amount, to_char(expenses_date, 'DD-MM-YYYY') as expenses_date, expenses_state 
+from jeg_adm.expenses exp
+left join (select campaign_id, campaign_name from jeg_adm.campaign) camp on (camp.campaign_id = exp.campaign_id)
+left join (select work_id, type from jeg_adm.work) w on (w.work_id = exp.work_id);
+
+select at_work_id, at_w.employee_id, at_w.work_id, at_work_pricexha, total, at_work_description, at_w.campaign_id, at_work_currency, employee_name, type
+from jeg_adm.at_work at_w
+left join (select employee_id, employee_name from jeg_adm.employee) emp on (emp.employee_id = at_w.employee_id)
+left join (select campaign_id, campaign_name from jeg_adm.campaign) camp on (camp.campaign_id = at_w.campaign_id)
+left join (select work_id, type from jeg_adm.work) w on (w.work_id = at_w.work_id);
+
+select campaign_name, employee_name, type, withdrawal_currency, w.employee_id, w.campaign_id, withdrawal_description, withdrawal_id, w.work_id, delivered, withdrawal_amount, to_char(withdrawal_date, 'DD-MM-YYYY') as withdrawal_date, withdrawal_type 
+from jeg_adm.withdrawal w
+left join (select employee_id, employee_name from jeg_adm.employee) emp on (emp.employee_id = w.employee_id)
+left join (select campaign_id, campaign_name from jeg_adm.campaign) camp on (camp.campaign_id = w.campaign_id)
+left join (select work_id, type from jeg_adm.work) wk on (wk.work_id =  w.work_id);
+
+
+
+select camp.campaign_id, campaign_name, sum(w.pricexha*w.work_ha) as total_gain, sum(w.work_ha) as total_has, sum(amount_invoice_line) as total_invoiced, sum(invoiced_ha) as invoiced_has 
+from (select campaign_id, campaign_name from jeg_adm.campaign) camp
+left join (select work_id, campaign_id, type, pricexha, work_ha from jeg_adm.work) w on (w.campaign_id = camp.campaign_id)
+left join (select invoice_id, invoice_line_id, invoiced_ha, work_id, amount_invoice_line from jeg_adm.invoice_line) inv_l on (inv_l.work_id = w.work_id)
+left join (select invoice_id, subtotal_amount, total_amount from jeg_adm.invoice) inv on (inv.invoice_id = inv_l.invoice_id)
+group by camp.campaign_id, campaign_name;
+

@@ -1,7 +1,7 @@
 const pool = require('../database.js');
 
 
-function at_Work(id, employee, ha, price, total, work, campaign, description) {
+function at_Work(id, employee, ha, price, total, work, campaign, description, currency) {
     this.id = id;
     this.employee = employee;
     this.ha = ha;
@@ -10,6 +10,7 @@ function at_Work(id, employee, ha, price, total, work, campaign, description) {
     this.work = work;
     this.campaign = campaign;
     this.description = description;
+    this.currency = currency;
 }
 
 at_Work.prototype.show = function () {
@@ -21,8 +22,9 @@ at_Work.prototype.show = function () {
     const work = this.work;
     const campaign = this.campaign;
     const description = this.description;
+    const currency = this.currency;
 
-    console.log(id + ", " + employee + ", " + ha + ", " + price + ", " + total + ", " + work + ", " + campaign + ", " + description + ".");
+    console.log(id + ", " + employee + ", " + ha + ", " + price + ", " + total + ", " + work + ", " + campaign + ", " + description + ", " + currency + ".");
 }
 
 at_Work.prototype.makePersistent = async function () {
@@ -33,8 +35,9 @@ at_Work.prototype.makePersistent = async function () {
     const work = this.work;
     const campaign = this.campaign;
     const description = this.description;
+    const currency = this.currency;
 
-    await pool.query("insert into jeg_adm.at_work values (default," + employee + "," + work + "," + ha + "," + price + "," + total + ",'" + description + "'," + campaign + ");");
+    await pool.query("insert into jeg_adm.at_work values (default," + employee + "," + work + "," + ha + "," + price + "," + total + ",'" + description + "'," + campaign + ",'" + currency + "');");
 }
 
 at_Work.prototype.pullData = async function () {
@@ -54,6 +57,7 @@ at_Work.prototype.pullData = async function () {
     this.price = info.rows[0].at_work_pricexha;
     this.total = info.rows[0].total;
     this.work = info.rows[0].work_id;
+    this.currency = info.rows[0].at_work_currency;
 }
 
 at_Work.prototype.updateData = async function () {
@@ -65,8 +69,9 @@ at_Work.prototype.updateData = async function () {
     const work = this.work;
     const campaign = this.campaign;
     const description = this.description;
+    const currency = this.currency;
 
-    await pool.query("update jeg_adm.at_work set has=" + ha + ",employee_id=" + employee + ",campaign_id=" + campaign + ",work_id=" + work + ",at_work_pricexha=" + price + ",total=" + total + ",at_work_description='" + description + "' where at_work_id=" + id + ";");
+    await pool.query("update jeg_adm.at_work set has=" + ha + ",employee_id=" + employee + ",campaign_id=" + campaign + ",work_id=" + work + ",at_work_pricexha=" + price + ",total=" + total + ",at_work_description='" + description + "',at_work_currency='" + currency + "' where at_work_id=" + id + ";");
 }
 
 at_Work.prototype.delete = async function () {

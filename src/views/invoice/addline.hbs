@@ -1,0 +1,98 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/invoice/{{invoice.0.invoice_id}}/addline" method="POST">
+                        <div class="form-group">
+                            <label for="nro">Nro de Factura:</label>
+                            <input type="number" value="{{invoice.0.invoice_nro}}" id="nro" class="form-control" name="nro" placeholder="Nro. de Factura">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="work_id">Trabajo a facturar:</label>
+                            <select name="work_id" id="work_id" class="form-control form-control-lg"
+                                onchange="javascript: sendWork(this.options[this.selectedIndex].value);">
+                                <option value="default">Seleccione un Trabajo a Facturar. </option>
+                                {{#each works}}
+                                <option value={{ work_id }}>{{ work_id }} - {{ work_type }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="invoiced_ha">Hectareas a facturar:</label>
+                            <input type="text" id="invoiced_ha" class="form-control" name="invoiced_ha"
+                                placeholder="HAs a facturar">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total_ha">Ha totales trabajadas:</label>
+                            <input type="text" id="total_ha" class="form-control" name="total_ha"
+                                placeholder="HAs totales">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción:</label> <br>
+                            <textarea name="description" id="description" rows="2" class="form-control"
+                                placeholder="Descripción"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subtotal">Monto:</label>
+                            <br>
+                            <input type="radio" id="currency" name="currency" value="ARS" checked>
+                            Pesos Arg.
+                            <input type="radio" id="currency" name="currency" value="U$S"> Dolares
+                            <br>
+                            <input type="text" size="10"  id="pricexha" name="pricexha" placeholder="Precio">
+                            X
+                            <input type="text"  size="10" id="inv_ha" name="inv_ha" placeholder="HAs" readonly>
+                            =
+                            <input type="text" class="form-control" id="amount" name="amount" placeholder="Monto">
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    function sendWork(work_id) {
+        const works = {{{ works2 }}};
+        if (work_id && work_id != 'default') {
+            works.forEach(function (element, index) {
+                if (element.work_id == work_id) {
+                    document.getElementById("pricexha").value = element.pricexha;
+                    document.getElementById("total_ha").value = element.work_ha;
+                    document.getElementById("inv_ha").value = element.work_ha;
+                    document.getElementById("invoiced_ha").value = element.work_ha;
+                    document.getElementById("amount").value = (element.pricexha) * (element.work_ha);
+                    $("input[name='currency'][value='" + element.currency + "']").prop("checked", true);
+                }
+            });
+        }    
+    };
+
+    $('#invoiced_ha').focusout(function () {
+        const newHa = document.getElementById("invoiced_ha").value;
+        const price = document.getElementById("pricexha").value;
+        document.getElementById("inv_ha").value = newHa;
+        document.getElementById("amount").value = (price) * (newHa);
+    });
+
+    $('#pricexha').focusout(function () {
+        const newHa = document.getElementById("invoiced_ha").value;
+        const price = document.getElementById("pricexha").value;
+        document.getElementById("amount").value = (price) * (newHa);
+    });
+</script>

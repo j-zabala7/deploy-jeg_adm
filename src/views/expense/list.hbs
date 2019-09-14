@@ -20,6 +20,7 @@
                 <th>ID</th>
                 <th>Realizado a</th>
                 <th>Monto</th>
+                <th>Moneda</th>
                 <th>Estado</th>
                 <th>Campaña</th>
                 <th>Trabajo</th>
@@ -35,9 +36,10 @@
                 <td>{{ expenses_id }}</td>
                 <td>{{ made_to }}</td>
                 <td>{{ expenses_amount }}</td>
+                <td>{{ expenses_currency }}</td>
                 <td>{{ expenses_state }}</td>
-                <td>{{ campaign_id }}</td>
-                <td>{{ work_id }}</td>
+                <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
+                <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
                 <td>{{ expenses_date }}</td>
                 <td>{{ expenses_description }}</td>
                 <td> <a href="/expense/edit/{{expenses_id}}"> Modificar </a> </td>
@@ -50,6 +52,7 @@
                 <th>ID</th>
                 <th>Realizado a</th>
                 <th>Monto</th>
+                <th>Moneda</th>
                 <th>Estado</th>
                 <th>Campaña</th>
                 <th>Trabajo</th>

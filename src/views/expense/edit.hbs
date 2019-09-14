@@ -14,6 +14,9 @@
                             <label for="name">Cantida de dinero:</label>
                             <input type="text" value="{{expense.amount}}" class="form-control" id="amount" name="amount"
                                 placeholder="Dinero">
+                            <br>
+                            <input type="radio" id="currency" name="currency" value="ARS"> Pesos Arg.
+                            <input type="radio" id="currency" name="currency" value="U$S"> Dolares
                         </div>
 
                         <div class="form-group">
@@ -74,8 +77,10 @@
 
 <script language="javascript" type="text/javascript">
     function SetSelectedOption() {
+        const currency = '{{expense.currency}}';
         document.getElementById("camp_id").value = ("{{expense.camp_id}}") ? "{{expense.camp_id}}" : 'default';
         document.getElementById("work_id").value = ("{{expense.work_id}}") ? "{{expense.work_id}}" : 'default';
+        $("input[name='currency'][value='" + currency + "']").prop("checked", true);
     }
     $(document).ready(SetSelectedOption);
 

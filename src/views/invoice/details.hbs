@@ -1,0 +1,108 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4  mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/invoice/edit/{{invoice.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="nro">Nro de Factura:</label>
+                            <input type="number" readonly id="nro" value="{{invoice.nro}}" class="form-control"
+                                name="nro" placeholder="Nro. de Factura">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="type">Tipo:</label>
+                            <select name="type" disabled id="type" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Tipo de Factura. </option>
+                                <option value='A'>Factura tipo A
+                                </option>
+                                <option value='B'>Factura tipo B
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="client_id">Cliente:</label>
+                            <select name="client_id" disabled id="client_id" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Cliente. </option>
+                                {{#each clients}}
+                                <option value={{ client_id }}>{{ client_id }} - {{ client_name }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date">Fecha:</label>
+                            <input type="date" id="date" readonly value="{{invoice.date}}" class="form-control"
+                                name="date" placeholder="Fecha">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">Estado:</label> <br>
+                            <input type="text" class="form-control" readonly name="state" value="{{invoice.state}}"
+                                id="state" placeholder="Estado">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción:</label> <br>
+                            <textarea name="description" readonly id="description" rows="2" class="form-control"
+                                placeholder="Descripción">{{invoice.description}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subtotal">Subtotal:</label>
+                            <input type="text" class="form-control" readonly value="{{invoice.subtotal}}" id="subtotal"
+                                name="subtotal" placeholder="Subtotal">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iva">IVA:</label>
+                            <select name="iva" disabled id="iva" class="form-control form-control-lg"
+                                onchange="javascript: sendCampaign(this.options[this.selectedIndex].value);">
+                                <option value="default"> Seleccione IVA a aplicar. </option>
+                                {{#each ivas}}
+                                <option value={{ iva_id }}>{{ iva_value }} - {{ iva_description }}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total">Total:</label>
+                            <input type="text" readonly class="form-control" value="{{invoice.total}}" id="total"
+                                name="total" placeholder="Total">
+                            <br>
+                            <input type="radio" readonly id="currency" name="currency" value="ARS" checked>
+                            Pesos Arg.
+                            <input type="radio" readonly id="currency" name="currency" value="U$S"> Dolares
+                        </div>
+
+                        <div class="form-group">
+                            <a href="/invoice/edit/{{invoice.id}}" class="btn btn-success btn-block"> Modificar </a>
+                            <a href="/invoice/" class="btn btn-success btn-block"> Cancelar </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script language="javascript" type="text/javascript">
+    function SetSelectedOption() {
+        const currency = '{{invoice.currency}}';
+        document.getElementById("client_id").value = ("{{invoice.client_id}}") ? "{{invoice.client_id}}" : 'default';
+        document.getElementById("iva").value = ("{{invoice.iva_id}}") ? "{{invoice.iva_id}}" : 'default';
+        document.getElementById("type").value = ("{{invoice.type}}") ? "{{invoice.type}}" : 'default';
+
+        $("input[name='currency'][value='" + currency + "']").prop("checked", true);
+    }
+    $(document).ready(SetSelectedOption);
+
+
+
+</script>

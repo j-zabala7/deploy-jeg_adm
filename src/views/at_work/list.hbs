@@ -25,7 +25,9 @@
                 <th>Campaña</th>
                 <th>Trabajo</th>
                 <th>Precio Por HA</th>
+                <th>Moneda</th>
                 <th>HA trabajadas</th>
+                <th> Ganacia del Empleado </th>
                 <th>Descripción</th> {{!-- <th>Moneda</th> --}}
                 <th></th>
                 <th></th>
@@ -35,11 +37,13 @@
             {{#each at_works}}
             <tr>
                 <td>{{ at_work_id }}</td>
-                <td>{{ employee_id }}</td>
-                <td>{{ campaign_id }}</td>
-                <td>{{ work_id }}</td>
-                <td>{{ at_work_pricexha }}</td> {{!-- <td>{{ currency }}</td> --}}
+                <td> <a href="/employee/details/{{employee_id}}"> {{ employee_id }} - {{ employee_name }} </a> </td>
+                <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
+                <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
+                <td>{{ at_work_pricexha }}</td>
+                <td>{{ at_work_currency }}</td>
                 <td>{{ has }}</td>
+                <td> {{ total }} </td>
                 <td>{{ at_work_description }}</td>
                 <td> <a href="/at_work/edit/{{at_work_id}}"> Modificar </a> </td>
                 <td> <a href="/at_work/delete/{{at_work_id}}"> Eliminar </a> </td>
@@ -53,7 +57,9 @@
                 <th>Campaña</th>
                 <th>Trabajo</th>
                 <th>Precio Por HA</th>
+                <th>Moneda</th>
                 <th>HA trabajadas</th>
+                <th> Ganacia del Empleado </th>
                 <th>Descripción</th> {{!-- <th>Moneda</th> --}}
                 <th></th>
                 <th></th>

@@ -9,7 +9,7 @@ const Expense = require('../models/expense').expense;
 const { isLoggedIn } = require('../lib/auth'); // importamos metodos para proteger rutas
 
 router.get('/', isLoggedIn, async (req, res) => {
-    const expenses = await pool.query("select made_to, campaign_id, expenses_description, expenses_id, work_id, expenses_amount, to_char(expenses_date, 'DD-MM-YYYY') as expenses_date, expenses_state from jeg_adm.expenses").catch((e) => { console.log("-------------router Expenses-------------------"); console.error(e) });
+    const expenses = await pool.query("select campaign_name, type, expenses_currency, made_to, exp.campaign_id, expenses_description, expenses_id, exp.work_id, expenses_amount, to_char(expenses_date, 'DD-MM-YYYY') as expenses_date, expenses_state from jeg_adm.expenses exp left join (select campaign_id, campaign_name from jeg_adm.campaign) camp on (camp.campaign_id = exp.campaign_id) left join (select work_id, type from jeg_adm.work) w on (w.work_id = exp.work_id);").catch((e) => { console.log("-------------router Expenses-------------------"); console.error(e) });
     var date = new Date();
     console.log(expenses.rows);
 
@@ -24,8 +24,8 @@ router.get('/add', isLoggedIn, async (req, res) => {
 });
 
 router.post('/add', isLoggedIn, async (req, res) => {
-    const { made_to, camp_id, date, description, work_id, state, amount } = req.body;
-    const expense = new Expense(null, made_to, amount, date, description, state, camp_id, work_id);
+    const { made_to, camp_id, date, description, work_id, state, amount, currency } = req.body;
+    const expense = new Expense(null, made_to, amount, date, description, state, camp_id, work_id, currency);
     expense.show();
 
     await expense.makePersistent().catch((e) => {
@@ -41,7 +41,7 @@ router.post('/add', isLoggedIn, async (req, res) => {
 router.get('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     //console.log('edit id :' + id);
-    const expense = new Expense(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const expense = new Expense(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     await expense.pullData();
     //console.log("despues de pullData");
     console.log(expense.date);
@@ -65,9 +65,9 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    const { camp_id, state, made_to, amount, date, description, work_id } = req.body;
+    const { camp_id, state, made_to, amount, date, description, work_id, currency } = req.body;
 
-    const expense = new Expense(id, made_to, amount, date, description, state, camp_id, work_id);
+    const expense = new Expense(id, made_to, amount, date, description, state, camp_id, work_id, currency);
     expense.show();
     await expense.updateData();
 
@@ -78,7 +78,7 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
 router.get('/delete/:id', isLoggedIn, async (req, res) => {
 
     const { id } = req.params;
-    const expense = new Expense(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const expense = new Expense(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
     await expense.delete();
     req.flash('success', 'Gasto eliminado correctamente.');
