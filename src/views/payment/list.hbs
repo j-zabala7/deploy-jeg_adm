@@ -6,24 +6,13 @@
 
     }
 </style>
-
 <br>
 <br>
 <div class="container p-2">
     <div class="row">
         <div class="col-md-2  mx-auto">
             <div class="card">
-                <a class="btn btn-primary" href="/campaign/add" role="button">Agregar!</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container p-2">
-    <div class="row">
-        <div class="col-md-2  mx-auto">
-            <div class="card">
-                <a class="btn btn-primary" href="/campaign/statistics" role="button">Estadisticas!</a>
+                <a class="btn btn-primary" href="/payment/add" role="button">Agregar!</a>
             </div>
         </div>
     </div>
@@ -32,39 +21,54 @@
 <br>
 <br>
 
-<div class="div">
+<div id="tableContainer" class="div">
     <table id="listdata" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
-                <th>Fecha Comienzo</th>
-                <th>Fecha Fin</th>
+                <th>Medio de pago</th>
+                <th>Nro de Medio de pago</th>
+                <th>Monto</th>
+                <th>Moneda</th>
+                <th>Campaña</th>
+                <th>Factura</th>
+                <th>Trabajo</th>
+                <th>Fecha</th>
                 <th>Descripción</th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            {{#each datos}}
+            {{#each payments}}
             <tr>
-                <td>{{ campaign_id }}</td>
-                <td>{{ campaign_name }}</td>
-                <td>{{ campaign_date_start }}</td>
-                <td>{{ campaign_date_end }}</td>
-                <td>{{ campaign_description }}</td>
-                <td> <a href="/campaign/edit/{{campaign_id}}"> Modificar </a> </td>
-                <td> <a href="/campaign/delete/{{campaign_id}}"> Eliminar </a> </td>
+                <td>{{ payment_id }}</td>
+                <td>{{ payment_method }}</td>
+                <td>{{ id_payment_method }}</td>
+                <td>{{ payment_total }}</td>
+                <td>{{ payment_currency }}</td>
+                <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
+                <td> <a href="/invoice/details/{{invoice_id}}"> {{ invoice_id }} - {{ client_name }} </a> </td>
+                <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
+                <td>{{ payment_date }}</td>
+                <td>{{ payment_description }}</td>
+                <td> <a href="/payment/edit/{{payment_id}}"> Modificar </a> </td>
+                <td> <a href="/payment/delete/{{payment_id}}"> Eliminar </a> </td>
             </tr>
             {{/each}}
         </tbody>
         <tfoot>
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Fecha Comienzo</th>
-                <th>Fecha Fin</th>
-                <th>Descripción</th>
+                <th>Total:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -77,7 +81,39 @@
         $('#listdata').DataTable({
             language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
             dom: 'Bfrtipl',
-            //"lengthChange": true,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                totalSubt = api
+                    .column(3)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotalSubt = api
+                    .column(3, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(3).footer()).html(
+                    '$' + pageTotalSubt + ' ( $' + totalSubt + ' total)'
+                );
+
+            },
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             buttons: [
                 {

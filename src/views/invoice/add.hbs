@@ -50,8 +50,8 @@
 
                         <div class="form-group">
                             <label for="subtotal">Subtotal:</label>
-                            <input type="text" class="form-control" id="subtotal" name="subtotal"
-                                placeholder="Subtotal">
+                            <input type="text" class="form-control" id="subtotal" name="subtotal" value='0' placeholder="Subtotal = 0"
+                                readonly>
                         </div>
 
                         <div class="form-group">
@@ -59,16 +59,24 @@
                             <select name="iva" id="iva" class="form-control form-control-lg"
                                 onchange="javascript: sendCampaign(this.options[this.selectedIndex].value);">
                                 <option value="default"> Seleccione IVA a aplicar. </option>
-                                {{#each ivas}}
+                                <option value='1'> IVA Servicios - 10,5. </option>
+                                {{!-- {{#each ivas}}
                                 <option value={{ iva_id }}>{{ iva_value }} - {{ iva_description }}
                                 </option>
-                                {{/each}}
+                                {{/each}} --}}
                             </select>
                         </div>
 
                         <div class="form-group">
+                            <label for="subtotal">% IVA:</label>
+                            <input type="text" class="form-control" id="amount_iva" value='0'  name="amount_iva"
+                                placeholder="% IVA" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="total">Total:</label>
-                            <input type="text" class="form-control" id="total" name="total" placeholder="Total">
+                            <input type="text" class="form-control" id="total" name="total" value='0' placeholder="Total = 0"
+                                readonly>
                             <br>
                             <input type="radio" id="currency" name="currency" value="ARS" checked>
                             Pesos Arg.

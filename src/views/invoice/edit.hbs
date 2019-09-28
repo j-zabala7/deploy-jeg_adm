@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <label for="subtotal">Subtotal:</label>
                             <input type="text" class="form-control" value="{{invoice.subtotal}}" id="subtotal"
-                                name="subtotal" placeholder="Subtotal">
+                                name="subtotal" placeholder="Subtotal" readonly>
                         </div>
 
                         <div class="form-group">
@@ -70,9 +70,15 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="subtotal">% IVA:</label>
+                            <input type="text" class="form-control" id="amount_iva" name="amount_iva"
+                                placeholder="% IVA" value="{{ invoice.amount_iva }}" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="total">Total:</label>
                             <input type="text" class="form-control" value="{{invoice.total}}" id="total" name="total"
-                                placeholder="Total">
+                                placeholder="Total" readonly>
                             <br>
                             <input type="radio" id="currency" name="currency" value="ARS" checked>
                             Pesos Arg.

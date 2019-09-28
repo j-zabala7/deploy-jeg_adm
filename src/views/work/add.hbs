@@ -16,12 +16,24 @@
 
                         <div class="form-group">
                             <label for="Tipo">Tipo:</label>
-                            <input type="text" class="form-control" id="type" name="type" placeholder="Tipo" autofocus>
+                            <select name="type" id="type" class="form-control form-control-lg">
+                                <option value="default"> Seleccione el tipo del Trabajo. </option>
+                                <option value="Cosecha"> Cosecha. </option>
+                                <option value="Siembra"> Siembra. </option>
+                                {{!-- <option value="Trigo"> Trigo. </option> --}}
+                            </select>
+                            {{!-- <input type="text" class="form-control" id="type" name="type" placeholder="Tipo" > --}}
                         </div>
 
                         <div class="form-group">
                             <label for="cereal">Cereal:</label>
-                            <input type="text" class="form-control" id="cereal" name="cereal" placeholder="Cereal">
+                            <select name="cereal" id="cereal" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Cereal. </option>
+                                <option value="Maíz"> Maíz. </option>
+                                <option value="Soja"> Soja. </option>
+                                <option value="Trigo"> Trigo. </option>
+                            </select>
+                            {{!-- <input type="text" class="form-control" id="cereal" name="cereal" placeholder="Cereal"> --}}
                         </div>
 
                         <div class="form-group">

@@ -115,7 +115,7 @@ create table withdrawal(
 	withdrawal_amount double precision, --ver si falta la currency
 	withdrawal_date date,
 	withdrawal_type varchar(50),
-	delivered varchar(50),
+	deliverer varchar(100),
 	campaign_id int,
 	work_id int,
 	withdrawal_description varchar(200),
@@ -141,6 +141,7 @@ create table jeg_adm.invoice (
 	client_id int,
 	invoice_date date,
 	subtotal_amount double precision,
+	amount_iva double precision,
 	total_amount double precision,
 	invoice_description varchar(200),
 	invoice_currency varchar(50),
@@ -248,7 +249,8 @@ BEGIN
 select invoice_id, sum(amount_invoice_line) as total into id, total from (select invoice_id,amount_invoice_line from jeg_adm.invoice_line where invoice_id = new.invoice_id ) inv group by invoice_id;
 update jeg_adm.invoice set subtotal_amount=total where invoice_id=id;
 select iva_rate into iva from ((select invoice_id, iva_id from jeg_adm.invoice where invoice_id=id) inv natural join (select iva_id, iva_rate from jeg_adm.iva) iva);
-update jeg_adm.invoice set total_amount=(subtotal_amount*iva) where invoice_id=id;
+update jeg_adm.invoice set amount_iva=(subtotal_amount*iva) where invoice_id=id;
+update jeg_adm.invoice set total_amount=((subtotal_amount*iva) + subtotal_amount) where invoice_id=id;
 return new;
 END;$$
 LANGUAGE 'plpgsql';
@@ -269,7 +271,8 @@ BEGIN
 select invoice_id, sum(amount_invoice_line) as total into id, total from (select invoice_id,amount_invoice_line from jeg_adm.invoice_line where invoice_id = old.invoice_id ) inv group by invoice_id;
 update jeg_adm.invoice set subtotal_amount=total where invoice_id=id;
 select iva_rate into iva from ((select invoice_id, iva_id from jeg_adm.invoice where invoice_id=id) inv natural join (select iva_id, iva_rate from jeg_adm.iva) iva);
-update jeg_adm.invoice set total_amount=(subtotal_amount*iva) where invoice_id=id;
+update jeg_adm.invoice set amount_iva=(subtotal_amount*iva) where invoice_id=id;
+update jeg_adm.invoice set total_amount=((subtotal_amount*iva) + subtotal_amount) where invoice_id=id;
 return new;
 END;$$
 LANGUAGE 'plpgsql';
@@ -284,4 +287,23 @@ create trigger trigger_insert_invoice
 after insert on jeg_adm.invoice_line
 for EACH ROW
 EXECUTE PROCEDURE jeg_adm.function_update_invoice();
+
+insert into jeg_adm.iva values (default, 10.5, (10.5/100), 'Servicios');
+
+create table jeg_adm.payment (
+	payment_id serial,
+	invoice_id integer,
+	campaign_id integer,
+	work_id integer,
+	payment_total double precision,
+	payment_date date,
+	payment_method varchar(50),
+	id_payment_method varchar(100),
+	payment_currency varchar(50),
+	payment_description varchar(200),
+	constraint pk_payment primary key (payment_id),
+	constraint fk_payment_invoice foreign key (invoice_id) references jeg_adm.invoice(invoice_id),
+	constraint fk_payment_campaign foreign key (campaign_id) references jeg_adm.campaign(campaign_id),
+	constraint fk_payment_work foreign key (work_id) references jeg_adm.work(work_id)
+);
 

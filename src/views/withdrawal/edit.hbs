@@ -26,6 +26,12 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="delivered">Entregó:</label> <br>
+                            <input type="checkbox" name="deliverer" id="deliverer" class="form-control form-control-lg"
+                                value="{{withdrawal.deliverer}}">
+                        </div>
+
+                        <div class="form-group">
                             <label for="emp_id">Empleado:</label>
                             <select name="emp_id" id="emp_id" class="form-control form-control-lg">
                                 <option value="default"> Seleccione un Empleado. </option>
@@ -34,11 +40,6 @@
                                 </option>
                                 {{/each}}
                             </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="delivered">Entregado:</label> <br>
-                            <input type="checkbox" name="delivered" id="delivered" value="delivered">
                         </div>
 
                         <div class="form-group">
@@ -91,9 +92,9 @@
         document.getElementById("emp_id").value = ("{{withdrawal.emp_id}}") ? "{{withdrawal.emp_id}}" : 'default';
         document.getElementById("camp_id").value = ("{{withdrawal.camp_id}}") ? "{{withdrawal.camp_id}}" : 'default';
         document.getElementById("work_id").value = ("{{withdrawal.work_id}}") ? "{{withdrawal.work_id}}" : 'default';
-        if ("{{withdrawal.delivered}}" == 'delivered') {
+        /*if ("{{withdrawal.delivered}}" == 'delivered') {
             $("#delivered").prop("checked", true);
-        }
+        }*/
         $("input[name='currency'][value='" + currency + "']").prop("checked", true);
     }
     $(document).ready(SetSelectedOption);

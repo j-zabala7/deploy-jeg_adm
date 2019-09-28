@@ -134,3 +134,52 @@ div.dataTables_wrapper {
     position: ;
 }
 
+
+
+
+.line {
+    margin:5px 0;
+    height:2px;
+    background:
+      repeating-linear-gradient(to right,red 0,red 5px,transparent 5px,transparent 7px)
+      /*5px red then 2px transparent -> repeat this!*/
+  }
+  
+  .line1 {
+    margin:5px 0;
+    height:2px;
+    background:
+      repeating-linear-gradient(to right,red 0,red 3px,transparent 3px,transparent 7px)
+      /*3px red then 4px transparent -> repeat this!*/
+  }
+  
+  .line2 {
+    margin:5px 0;
+    height:2px;
+    background:
+      repeating-linear-gradient(to right,red 0,red 10px,transparent 10px,transparent 12px)
+      /*10px red then 2px transparent -> repeat this!*/
+  }
+
+  .line3 {
+    margin:5px 0;
+    height:20px;
+    background:
+      /* repeating-linear-gradient(to right,red 0,red 5px,transparent 5px,transparent 7px) top,
+      repeating-linear-gradient(to right,red 0,red 3px,transparent 3px,transparent 7px) center, */
+      repeating-linear-gradient(to right,red 0,red 10px,transparent 10px,transparent 12px) bottom;
+    background-size:100% 2px;
+    background-repeat:no-repeat;
+  }
+
+  .line4 {
+    margin: 5px 0;
+    height: 20px;
+    background:
+        /* repeating-linear-gradient(to right,red 0,red 5px,transparent 5px,transparent 7px) top,
+repeating-linear-gradient(to right,red 0,red 3px,transparent 3px,transparent 7px) center, */
+        repeating-linear-gradient(to right, rgb(5, 5, 5) 0, rgb(5, 5, 5) 10px, transparent 10px, transparent 12px) bottom;
+    background-size: 100% 2px;
+    background-repeat: no-repeat;
+}
+

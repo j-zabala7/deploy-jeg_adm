@@ -33,6 +33,8 @@ router.post('/add', isLoggedIn, async (req, res) => {
         console.log("->routes/expense.js::/add ");
         console.error(e)
         console.log("-------------------------------");
+        req.flash('message', 'Error al cargar el nuevo Gasto.');
+        res.redirect('/expense/');
     });
     req.flash('success', 'Gasto cargado correctamente.');
     res.redirect('/expense/');
@@ -69,7 +71,11 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
 
     const expense = new Expense(id, made_to, amount, date, description, state, camp_id, work_id, currency);
     expense.show();
-    await expense.updateData();
+    await expense.updateData().catch((e) => {
+        console.error(e);
+        req.flash('message', 'Error al actualizar Gasto.');
+        res.redirect('/expense/edit/' + id);
+    });
 
     req.flash('success', 'Gasto actualizado correctamente.');
     res.redirect('/expense/edit/' + id);
@@ -80,11 +86,13 @@ router.get('/delete/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const expense = new Expense(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
-    await expense.delete();
+    await expense.delete().catch((e) => {
+        console.error(e);
+        req.flash('message', 'Error al eliminar Gasto.');
+        res.redirect('/expense/');
+    });
     req.flash('success', 'Gasto eliminado correctamente.');
     res.redirect('/expense/');
-
-
 });
 
 router.post('/infoCampaign', isLoggedIn, async (req, res) => {

@@ -1,3 +1,13 @@
+<style>
+    #listdata_length,
+    #invoice_line_length {
+
+        position: relative;
+        left: 230px;
+
+    }
+</style>
+
 <br>
 <br>
 <div class="container p-2">
@@ -25,6 +35,7 @@
                 <th>Moneda</th>
                 <th>Subtotal</th>
                 <th>IVA</th>
+                <th>% IVA</th>
                 <th>Total</th>
                 <th>Estado</th>
                 <th>Descripción</th>
@@ -42,7 +53,8 @@
                 <td>{{ invoice_date }}</td>
                 <td>{{ invoice_currency }}</td>
                 <td>{{ subtotal_amount }}</td>
-                <td>{{ iva_id }}</td>
+                <td>{{ iva_value }} - {{ iva_description }}</td>
+                <td>{{ amount_iva }}</td>
                 <td>{{ total_amount }}</td>
                 <td>{{ invoice_state }}</td>
                 <td>{{ invoice_description }}</td>
@@ -53,17 +65,18 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>ID</th>
-                <th>Nro de Factura</th>
-                <th>Tipo</th>
-                <th>Cliente</th>
-                <th>Fecha</th>
-                <th>Moneda</th>
-                <th>Subtotal</th>
-                <th>IVA</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Descripción</th>
+                <th>Total:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -71,7 +84,10 @@
     </table>
     <div id="tableContainerInvoiceLine" class="div hidden">
         <b>Lineas Facturadas:</b> <br>
-        <a id="add_i_l" class="btn btn-primary" href="/invoice/{{id_selected_invoice}}/addline" role="button">Agregar Linea!</a>
+        <a id="add_i_l" class="btn btn-primary" href="/invoice/{{id_selected_invoice}}/addline" role="button">Agregar
+            Linea!</a>
+        <br>
+        <br>
         <table id="invoice_line" class="display nowrap table-bordered table-hover" cellspacing='0' width='100%'>
             <thead>
                 <tr>
@@ -89,14 +105,14 @@
             </thead>
             <tfoot>
                 <tr>
-                    <th>ID</th>
-                    <th>Trabajo</th>
-                    <th>Hectareas Facturadas</th>
-                    <th>Hectareas Totales</th>
-                    <th>Precio por HA</th>
-                    <th>Moneda</th>
-                    <th>Monto</th>
-                    <th>Descripción</th>
+                    <th>Total:</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -111,9 +127,83 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var id_selected_invoice = 1;
-        const table = $('#listdata').DataTable({
+        const tableConfig = {
             language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
-            dom: 'Bfrtip',
+            dom: 'Bfrtipl',
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                totalSubt = api
+                    .column(6)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotalSubt = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                totalT = api
+                    .column(9)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotalT = api
+                    .column(9, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over all pages
+                totalIva = api
+                    .column(8)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotalIva = api
+                    .column(8, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(6).footer()).html(
+                    '$' + pageTotalSubt + ' ( $' + totalSubt + ' total)'
+                );
+
+                // Update footer
+                $(api.column(9).footer()).html(
+                    '$' + pageTotalT + ' ( $' + totalT + ' total)'
+                );
+
+                // Update footer
+                $(api.column(8).footer()).html(
+                    '$' + pageTotalIva + ' ( $' + totalIva + ' total)'
+                );
+            },
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             buttons: [
                 {
                     extend: 'copy',
@@ -179,77 +269,189 @@
                 }
 
             ]
-        });
+        };
+        const tableConfigIL = {
+            language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
+            dom: 'Bfrtipl',
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                totalSubt = api
+                    .column(6)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotalSubt = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(6).footer()).html(
+                    '$' + pageTotalSubt + ' ( $' + totalSubt + ' total)'
+                );
+
+            },
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    exportOptions: {
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+                }
+                ,
+                {
+                    extend: 'csv',
+                    text: 'Exportar a CSV',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+                ,
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    title: '{{tagExport}}',
+                    filename: '{{tagExport}}' + '{{date}}',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+                ,
+                {
+                    extend: 'print',
+                    text: 'Imprimir pagina corriente',
+                    messageBottom: '\n Impreso en fecha: {{date}}',
+                    //messageTop: '',
+                    //  orientation: 'landscape',
+                    // pageSize: 'A4',
+                    title: '{{tagExport}}',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'current'
+                        }
+                    }
+
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text: 'Mostrar/Ocultar Columnas'
+                }
+
+            ]
+        };
+
+        const table = $('#listdata').DataTable(tableConfig);
+        const t_invoice_line = $('#invoice_line').DataTable(tableConfigIL);
 
         $('#listdata tbody').on('click', 'tr', function () {
+            var rowsf = table.rows(this).data();
+            var selected_id = rowsf[0][0];
+            alert(selected_id);
+
+
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
                 $('#tableContainerInvoiceLine').addClass('hidden');
+                //$('#invoice_line').DataTable().clear();
             }
             else {
-                $('#invoice_line').DataTable().clear();
+                //$('#invoice_line').DataTable().clear();
                 $('#tableContainerInvoiceLine').addClass('hidden');
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
                 var rows = table.rows(this).data();
                 id_selected_invoice = rows[0][0];
-                document.getElementById("add_i_l").href = "/invoice/"+id_selected_invoice+"/addline";
+                document.getElementById("add_i_l").href = "/invoice/" + id_selected_invoice + "/addline";
                 //alert(id_selected_invoice);
-                
-                $.post("/invoice/"+id_selected_invoice+"/listline", { invoice_id: id_selected_invoice }, function (data) {
+
+                $.post("/invoice/" + id_selected_invoice + "/listline", { invoice_id: id_selected_invoice }, function (data) {
                     //var t_invoice_line = $('#invoice_line').DataTable();
-                    
-                   /* var t_invoice_line = $('#invoice_line').DataTable({
-                        "render": function(data, type, row, meta){
-                            if(type === 'display'){
-                                data = '<a href="/invoice/'+ id_selected_invoice + '/' + row.invoice_line_id + '">' + data + '</a>';
-                            }
-                            return data;
-                        }
-                    });*/
-                    var t_invoice_line = $('#invoice_line').DataTable();
+
+                    /* var t_invoice_line = $('#invoice_line').DataTable({
+                         "render": function(data, type, row, meta){
+                             if(type === 'display'){
+                                 data = '<a href="/invoice/'+ id_selected_invoice + '/' + row.invoice_line_id + '">' + data + '</a>';
+                             }
+                             return data;
+                         }
+                     });*/
+                    $('#invoice_line').dataTable().fnClearTable();
 
                     //alert(data[0].invoice_line_id);
-                    data.forEach(function(element) {
+                    data.forEach(function (element) {
                         //console.log(element);
                         t_invoice_line.row.add([
                             element.invoice_line_id,
-                            '<a href="/work/details/'+ element.work_id + '">' + element.work_id + ' - ' + element.type + '</a>',
+                            '<a href="/work/details/' + element.work_id + '">' + element.work_id + ' - ' + element.type + '</a>',
                             element.invoiced_ha,
                             element.total_ha,
                             element.pricexha,
                             element.invoice_line_currency,
                             element.amount_invoice_line,
                             element.invoice_line_description,
-                            '<a href="/invoice/'+ id_selected_invoice + '/editline/' + element.invoice_line_id + '">' + 'Modificar' + '</a>',
-                            '<a href="/invoice/'+ id_selected_invoice + '/deleteline/' + element.invoice_line_id + '">' + 'Eliminar' + '</a>'
+                            '<a href="/invoice/' + id_selected_invoice + '/editline/' + element.invoice_line_id + '">' + 'Modificar' + '</a>',
+                            '<a href="/invoice/' + id_selected_invoice + '/deleteline/' + element.invoice_line_id + '">' + 'Eliminar' + '</a>'
                         ]).draw(false);
                     });
-                    
+
                     $('#tableContainerInvoiceLine').removeClass('hidden');
                 })
 
-               // var t_invoice_line = $('#invoice_line').DataTable();
+                // var t_invoice_line = $('#invoice_line').DataTable();
 
-               /* t_invoice_line.row.add([
-                    '.1',
-                    '.2',
-                    '.3',
-                    '.4',
-                    '.5',
-                    '.6',
-                    '.7',
-                    '.8',
-                    '.9'
-                ]).draw(false);
-                $('#tableContainerInvoiceLine').removeClass('hidden');*/
+                /* t_invoice_line.row.add([
+                     '.1',
+                     '.2',
+                     '.3',
+                     '.4',
+                     '.5',
+                     '.6',
+                     '.7',
+                     '.8',
+                     '.9'
+                 ]).draw(false);
+                 $('#tableContainerInvoiceLine').removeClass('hidden');*/
             }
             //alert(table.row(this).data());
         });
 
-        $('#button').click(function () {
+        /*$('#button').click(function () {
             table.row('.selected').remove().draw(false);
-        });
+        }); creo q era para borrar*/
     });
 
 

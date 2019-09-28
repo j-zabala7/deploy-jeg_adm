@@ -1,18 +1,19 @@
 const pool = require('../database.js');
 
 
-function Invoice(id, client_id, total, subtotal, iva, state, date, currency, description, nro, type) {
+function Invoice(id, client_id, total, subtotal, iva, state, date, currency, description, nro, type, amount_iva) {
     this.id = id;
     this.client_id = client_id;
     this.total = total;
     this.subtotal = subtotal;
     this.iva = iva;
     this.state = state;
-    this.date = date;
+    this.date = (date == "") ? null : ("'" + date + "'");
     this.description = description;
     this.currency = currency;
     this.nro = nro;
     this.type = type;
+    this.amount_iva = amount_iva;
 }
 
 Invoice.prototype.show = function () {
@@ -27,8 +28,9 @@ Invoice.prototype.show = function () {
     const currency = this.currency;
     const nro = this.nro;
     const type = this.type;
+    const amount_iva = this.amount_iva;
 
-    console.log(id + ", " + client_id + ", " + total + ", " + subtotal + ", " + iva + ", " + state + ", " + date + ", " + description + ", " + currency + ", " + nro + ", " + type + ".");
+    console.log(id + ", " + client_id + ", " + total + ", " + subtotal + ", " + iva + ", " + state + ", " + date + ", " + description + ", " + currency + ", " + nro + ", " + type + ", " + amount_iva + ".");
 }
 
 Invoice.prototype.makePersistent = async function () {
@@ -39,13 +41,15 @@ Invoice.prototype.makePersistent = async function () {
     const iva = this.iva;
     const nro = this.nro;
     const type = this.type;
+    const amount_iva = this.amount_iva;
 
     const client_id = this.client_id;
 
     const date = this.date;
     const description = this.description;
 
-    await pool.query("insert into jeg_adm.invoice values (default," + client_id + ",'" + date + "'," + subtotal + "," + total + ",'" + description + "','" + currency + "'," + iva + ",'" + state + "','" + type + "'," + nro + ");");
+
+    await pool.query("insert into jeg_adm.invoice values (default," + client_id + "," + date + "," + subtotal + "," + amount_iva + "," + total + ",'" + description + "','" + currency + "'," + iva + ",'" + state + "','" + type + "'," + nro + ");");
 }
 
 Invoice.prototype.pullData = async function () {
@@ -68,6 +72,7 @@ Invoice.prototype.pullData = async function () {
     this.iva_id = info.rows[0].iva_id;
     this.nro = info.rows[0].invoice_nro;
     this.type = info.rows[0].invoice_type;
+    this.amount_iva = info.rows[0].amount_iva;
 }
 
 Invoice.prototype.updateData = async function () {
@@ -79,13 +84,13 @@ Invoice.prototype.updateData = async function () {
     const currency = this.currency;
     const nro = this.nro;
     const type = this.type;
-
+    const amount_iva = this.amount_iva;
 
     const date = (this.date != null && this.date != "") ? (this.date) : 'NULL';
     const description = this.description;
     const id = this.id;
 
-    await pool.query("update jeg_adm.invoice set client_id=" + client_id + ",invoice_state='" + state + "',total_amount=" + total + ",subtotal_amount=" + subtotal + ",invoice_description='" + description + "',iva_id=" + iva + ",invoice_date='" + date + "',invoice_currency='" + currency + "',invoice_nro=" + nro + ",invoice_type='" + type + "' where invoice_id=" + id + ";");
+    await pool.query("update jeg_adm.invoice set client_id=" + client_id + ",invoice_state='" + state + "',total_amount=" + total + ",amount_iva=" + amount_iva + ",subtotal_amount=" + subtotal + ",invoice_description='" + description + "',iva_id=" + iva + ",invoice_date=" + date + ",invoice_currency='" + currency + "',invoice_nro=" + nro + ",invoice_type='" + type + "' where invoice_id=" + id + ";");
 }
 
 Invoice.prototype.delete = async function () {

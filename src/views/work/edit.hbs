@@ -16,14 +16,26 @@
 
                         <div class="form-group">
                             <label for="type">Tipo:</label>
-                            <input type="text" class="form-control" value="{{work.type}}" id="type" name="type"
-                                placeholder="Tipo" autofocus>
+                            <select name="type" id="type" class="form-control form-control-lg">
+                                <option value="default"> Seleccione el tipo del Trabajo. </option>
+                                <option value="Cosecha"> Cosecha. </option>
+                                <option value="Siembra"> Siembra. </option>
+                                {{!-- <option value="Trigo"> Trigo. </option> --}}
+                            </select>
+                            {{!-- <input type="text" class="form-control" value="{{work.type}}" id="type" name="type"
+                                placeholder="Tipo" autofocus> --}}
                         </div>
 
                         <div class="form-group">
                             <label for="cereal">Cereal:</label>
-                            <input type="text" class="form-control" class="form-control" value="{{work.cereal}}"
-                                id="cereal" name="cereal" placeholder="Cereal">
+                            <select name="cereal" id="cereal" class="form-control form-control-lg">
+                                <option value="default"> Seleccione un Cereal. </option>
+                                <option value="Maíz"> Maíz. </option>
+                                <option value="Soja"> Soja. </option>
+                                <option value="Trigo"> Trigo. </option>
+                            </select>
+                            {{!-- <input type="text" class="form-control" class="form-control" value="{{work.cereal}}"
+                                id="cereal" name="cereal" placeholder="Cereal"> --}}
                         </div>
 
                         <div class="form-group">
@@ -119,10 +131,14 @@
         const lot_id = '{{work.lot_id}}';
         const client_id = '{{work.client_id}}';
         const currency = '{{work.currency}}';
+        const cereal = '{{work.cereal}}';
+        const type = '{{work.type}}';
         document.getElementById("client_id").value = (client_id ? client_id : 'default');
         document.getElementById("lot_id").value = (lot_id ? lot_id : 'default');
         document.getElementById("camp_id").value = (campaign_id ? campaign_id : 'default');
         document.getElementById("cs_id").value = (cs_id ? cs_id : 'default');
+        document.getElementById("cereal").value = (cereal ? cereal : 'default');
+        document.getElementById("type").value = (type ? type : 'default');
         $("input[name='currency'][value='" + currency + "']").prop("checked", true);
         // document.getElementById("currency").value = currency;
         // $("input[name=currency][value=" + currency + "]").prop('checked', true);

@@ -72,14 +72,40 @@
 </div>
 
 <script language="javascript" type="text/javascript">
+    var wellDni = true;
+    var wellCuil = true;
+
+    function enableSubmit(){
+        alert("enableSubmit->wellCuil " + wellCuil);
+        alert("enableSubmit->wellDni " + wellDni );
+        if (wellCuil && wellDni){
+            $('#submit').prop("disabled", false);
+        }else{
+            $('#submit').prop("disabled", true);
+        }
+    }
 
     $('#dni').focusout(function () {
         $('#loaderDniDiv').removeClass("hidden");
         const dni = $('#dni').val();
         //alert(dni);
         //                 $("#message").html("<img src='images/loader.gif' /> checking...");
-
-        checkDniExist(dni);
+        //const oldDni = '{{employee.dni}}';
+        const oldDni = '{{employee.dni}}';
+        //alert(oldDni);
+        if ((dni != "") && (dni != oldDni)){
+            checkDniExist(dni);
+        }else{
+            $('#loaderDniDiv').addClass("hidden");
+            if (dni == oldDni){
+                $('#dniCheck').slideUp("slow");
+                $('#dniCheck').addClass('hidden');
+                //$('#submit').prop("disabled", false);
+                $('#loaderDniDiv').addClass("hidden");
+                wellDni = true;
+            }
+        }
+        enableSubmit();
     });
 
     function checkDniExist(dni) {
@@ -93,11 +119,13 @@
                 $('#dniCheckLabel').text("Ya existe un Emplado con ese DNI!");
                 $('#dniCheck').removeClass('hidden');
                 $('#loaderDniDiv').addClass("hidden");
+                wellDni = false;
             } else {
                 $('#dniCheck').slideUp("slow");
                 $('#dniCheck').addClass('hidden');
-                $('#submit').prop("disabled", false);
+                //$('#submit').prop("disabled", false);
                 $('#loaderDniDiv').addClass("hidden");
+                wellDni = true;
             }
         })
     };
@@ -106,7 +134,23 @@
         $('#loaderCuilDiv').removeClass("hidden");
         const cuil = $('#cuil').val();
         //alert(cuil);
-        checkCuilExist(cuil);
+        const oldCuil = '{{employee.cuil}}';
+        //alert(oldCuil);
+        if ((cuil != "") && (cuil != oldCuil)){
+            //alert("entro al if de llamada a func");
+            checkCuilExist(cuil);
+        }
+        else{
+            $('#loaderCuilDiv').addClass("hidden");
+            if (cuil == oldCuil) {
+                $('#cuilCheck').slideUp("slow");
+                $('#cuilCheck').addClass('hidden');
+                //$('#submit').prop("disabled", false);
+                $('#loaderCuilDiv').addClass("hidden");
+                wellCuil = true;
+            }
+        }
+        enableSubmit();
     });
 
     function checkCuilExist(cuil) {
@@ -120,11 +164,14 @@
                 $('#cuilCheckLabel').text("Ya existe un Emplado con ese CUIL!");
                 $('#cuilCheck').removeClass('hidden');
                 $('#loaderCuilDiv').addClass("hidden");
+                wellCuil = false;
+                //alert(wellCuil);
             } else {
                 $('#cuilCheck').slideUp("slow");
                 $('#cuilCheck').addClass('hidden');
-                $('#submit').prop("disabled", false);
+                //$('#submit').prop("disabled", false);
                 $('#loaderCuilDiv').addClass("hidden");
+                wellCuil = true;
             }
         })
     };

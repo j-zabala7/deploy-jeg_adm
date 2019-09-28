@@ -34,6 +34,8 @@ router.post('/add', isLoggedIn, async (req, res) => {
         console.log("->routes/work.js::/add ");
         console.error(e)
         console.log("-------------------------------");
+        req.flash('message', 'Error al cargar Trabajo/Tarea.');
+        res.redirect('/work/');
     });
 
     req.flash('success', 'Trabajo/Tarea creado correctamente.');
@@ -74,18 +76,22 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
     console.log(campaigns.rows);
     console.log(countrysides.rows);
     console.log(lots.rows)
-    res.render('work/edit', { work: work, clients: clients.rows, campaigns: campaigns.rows, countrysides : countrysides.rows, lots : lots.rows });
+    res.render('work/edit', { work: work, clients: clients.rows, campaigns: campaigns.rows, countrysides: countrysides.rows, lots: lots.rows });
 });
 
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    console.log("id a editar "+id);
+    console.log("id a editar " + id);
     const { type, state, start, end, cs_id, camp_id, description, lot_id, client_id, ha, price, currency, cereal } = req.body;
     const work = new Work(id, type, state, description, start, end, price, lot_id, ha, camp_id, cs_id, client_id, cereal, currency);
     console.log("post edit");
     work.show();
-    await work.updateData();
-
+    await work.updateData().catch((e) => {
+        console.error(e);
+        req.flash('message', 'Error al editar Trabajo/Tarea.');
+        res.redirect('/work/edit/' + id);
+    });
+    req.flash('success', 'Trabajo/Tarea modificado correctamente.');
     res.redirect('/work/edit/' + id);
 });
 
@@ -94,8 +100,12 @@ router.get('/delete/:id', isLoggedIn, async (req, res) => {
 
     const work = new Work(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
-    await work.delete();
-
+    await work.delete().catch((e) => {
+        console.error(e);
+        req.flash('message', 'Error al eliminar Trabajo/Tarea.');
+        res.redirect('/work/');
+    });
+    req.flash('message', 'Trabajo/Tarea eliminada correctamente.');
     res.redirect('/work/');
 });
 
@@ -118,7 +128,7 @@ router.get('/details/:id', isLoggedIn, async (req, res) => {
     console.log(campaigns.rows);
     console.log(countrysides.rows);
     console.log(lots.rows)
-    res.render('work/details', { work: work, clients: clients.rows, campaigns: campaigns.rows, countrysides : countrysides.rows, lots : lots.rows });
+    res.render('work/details', { work: work, clients: clients.rows, campaigns: campaigns.rows, countrysides: countrysides.rows, lots: lots.rows });
 });
 
 module.exports = router;

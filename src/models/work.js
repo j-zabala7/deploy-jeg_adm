@@ -7,8 +7,8 @@ function Work(id, type, state, description, start, end, price, lot_id, ha, camp_
     this.ha = ha;
     this.state = state;
     this.description = description;
-    this.start = start;
-    this.end = end;
+    this.start = (start == "") ? null : ("'" + start + "'");
+    this.end = (end == "") ? null : ("'" + end + "'");
     this.price = price;
     this.lot_id = lot_id;
     this.camp_id = camp_id;
@@ -53,7 +53,7 @@ Work.prototype.makePersistent = async function () {
     const currency = this.currency;
     const cs_id = this.cs_id;
 
-    await pool.query("insert into jeg_adm.work values (default,'" + type + "','" + state + "','" + description + "','" + start + "','" + end + "'," + price + "," + lot_id + "," + ha + "," + camp_id + "," + cs_id + "," + client_id + ",'" + cereal + "','" + currency + "');");
+    await pool.query("insert into jeg_adm.work values (default,'" + type + "','" + state + "','" + description + "'," + start + "," + end + "," + price + "," + lot_id + "," + ha + "," + camp_id + "," + cs_id + "," + client_id + ",'" + cereal + "','" + currency + "');");
 }
 
 Work.prototype.pullData = async function () {
@@ -102,7 +102,7 @@ Work.prototype.updateData = async function () {
     const currency = this.currency;
     console.log("antes del query ->  updateData");
     this.show();
-    await pool.query("update jeg_adm.work set work_ha=" + ha + ",type='" + type +  "',campaign_id=" + camp_id + ",work_description='" + description + "',lot_id=" + lot_id + ",work_state='" + state + "',start_date='" + start + "',end_date='" + end + "',pricexha=" + price + ",countryside_id=" + cs_id + ",client_id=" + client_id + ",cereal='" + cereal + "',currency='" + currency + "' where work_id=" + id + ";").catch((e)=>{console.log("-------------------update Data work------------------"); console.log(e);});
+    await pool.query("update jeg_adm.work set work_ha=" + ha + ",type='" + type +  "',campaign_id=" + camp_id + ",work_description='" + description + "',lot_id=" + lot_id + ",work_state='" + state + "',start_date=" + start + ",end_date=" + end + ",pricexha=" + price + ",countryside_id=" + cs_id + ",client_id=" + client_id + ",cereal='" + cereal + "',currency='" + currency + "' where work_id=" + id + ";").catch((e)=>{console.log("-------------------update Data work------------------"); console.log(e);});
 }
 
 Work.prototype.delete = async function () {

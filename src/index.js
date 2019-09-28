@@ -79,6 +79,7 @@ app.use('/withdrawal', require('./routes/withdrawal'));
 app.use('/expense', require('./routes/expense'));
 app.use('/at_work', require('./routes/at_work'));
 app.use('/invoice', require('./routes/invoice'));
+app.use('/payment', require('./routes/payment'));
 
 
 

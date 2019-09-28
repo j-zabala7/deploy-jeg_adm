@@ -5,12 +5,12 @@ function Campaign(id, name, start, end, description) {
     this.id = id;
 
     //  this.start = new Date(start).toLocaleDateString();
-    this.start =  start;
+    this.start =  (start == "") ? null : ("'" + start + "'");
 
     this.name = name;
 
     // this.end = new Date(end).toLocaleDateString();
-    this.end =  end;
+    this.end =  (end == "") ? null : ("'" + end + "'");
 
     this.description = description;
     console.log("-------Campaign---------"+this.id+"--------------------");
@@ -40,7 +40,7 @@ Campaign.prototype.makePersistent = async function () {
     console.log("-------------> make makePersistent");
     console.log(start);
     console.log(end);
-    await pool.query("insert into jeg_adm.campaign values (default,'" + name + "','" + start + "','" + end + "','" + description + "');").catch((e)=> {console.log("--------------------------------");console.error(e)});;
+    await pool.query("insert into jeg_adm.campaign values (default,'" + name + "'," + start + "," + end + ",'" + description + "');").catch((e)=> {console.log("--------------------------------");console.error(e)});;
     // await pool.query("insert into jeg_adm.campaign values (default,'" + start + "','" + end + "');").catch((e) => { console.log("--------------------------------"); console.error(e) });;
 
 }
@@ -69,7 +69,7 @@ Campaign.prototype.updateData = async function () {
     const end = this.end;
     const description = this.description;
     console.log("antes de query en updateData");
-    await pool.query("update jeg_adm.campaign set campaign_date_start='" + start + "',campaign_date_end='" + end + "',campaign_name='" + name + "', campaign_description='" + description + "' where campaign_id=" + id + ";");
+    await pool.query("update jeg_adm.campaign set campaign_date_start=" + start + ",campaign_date_end=" + end + ",campaign_name='" + name + "', campaign_description='" + description + "' where campaign_id=" + id + ";");
     // await pool.query("update jeg_adm.campaign set campaign_date_start=" + start + ",campaign_date_end=" + end + "where campaign_id=" + id + ";");
 
 }

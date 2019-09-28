@@ -12,11 +12,13 @@ const { isLoggedIn } = require('../lib/auth'); // importamos metodos para proteg
 
 router.get('/', isLoggedIn, async (req, res) => {
     // const invoices = await pool.query("select invoice_currency, invoice_nro, invoice_type, invoice_state, client_id, invoice_description, invoice_id, subtotal_amount, total_amount, to_char(invoice_date, 'DD-MM-YYYY') as invoice_date, iva_id from jeg_adm.invoice").catch((e) => { console.log("-------------router Invoice-------------------"); console.error(e) });
+    //     const invoices = await pool.query("select invoice_currency, amount_iva, invoice_nro, invoice_type, invoice_state, client_id, invoice_description, invoice_id, subtotal_amount, total_amount, to_char(invoice_date, 'DD-MM-YYYY') as invoice_date, iva_id, client_name from (jeg_adm.invoice inv natural join (select client_id, client_name from jeg_adm.client) cli);").catch((e) => {
 
-    const invoices = await pool.query("    select invoice_currency, invoice_nro, invoice_type, invoice_state, client_id, invoice_description, invoice_id, subtotal_amount, total_amount, to_char(invoice_date, 'DD-MM-YYYY') as invoice_date, iva_id, client_name from (jeg_adm.invoice inv natural join (select client_id, client_name from jeg_adm.client) cli);").catch((e) => {
+    const invoices = await pool.query("select invoice_currency, iva_value, iva_description, amount_iva, invoice_nro, invoice_type, invoice_state, client_id, invoice_description, invoice_id, subtotal_amount, total_amount, to_char(invoice_date, 'DD-MM-YYYY') as invoice_date, inv.iva_id, client_name from (jeg_adm.invoice inv natural join (select client_id, client_name from jeg_adm.client) cli left join (select * from jeg_adm.iva) iva on iva.iva_id = inv.iva_id);").catch((e) => {
         console.log("-------------router Invoice-------------------");
         console.error(e)
     });
+
     var date = new Date();
 
     console.log(invoices.rows);
@@ -37,8 +39,8 @@ router.get('/add', isLoggedIn, async (req, res) => {
 });
 
 router.post('/add', isLoggedIn, async (req, res) => {
-    const { client_id, total, date, description, subtotal, currency, state, iva, nro, type } = req.body;
-    const invoice = new Invoice(null, client_id, total, subtotal, iva, state, date, currency, description, nro, type);
+    const { client_id, total, date, description, subtotal, currency, state, iva, nro, type, amount_iva } = req.body;
+    const invoice = new Invoice(null, client_id, total, subtotal, iva, state, date, currency, description, nro, type, amount_iva);
     invoice.show();
 
     await invoice.makePersistent().catch((e) => {
@@ -54,7 +56,7 @@ router.post('/add', isLoggedIn, async (req, res) => {
 router.get('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     console.log('edit id :' + id);
-    const invoice = new Invoice(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const invoice = new Invoice(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     await invoice.pullData();
     console.log("despues de pullData");
     invoice.show();
@@ -74,9 +76,9 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    const { client_id, total, date, subtotal, iva, description, state, currency, nro, type } = req.body;
+    const { client_id, total, date, subtotal, iva, description, state, currency, nro, type, amount_iva } = req.body;
 
-    const invoice = new Invoice(id, client_id, total, subtotal, iva, state, date, currency, description, nro, type);
+    const invoice = new Invoice(id, client_id, total, subtotal, iva, state, date, currency, description, nro, type, amount_iva);
     invoice.show();
     await invoice.updateData();
 
@@ -88,7 +90,7 @@ router.get('/delete/:id', isLoggedIn, async (req, res) => {
 
     const { id } = req.params;
 
-    const invoice = new Invoice(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const invoice = new Invoice(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     await invoice.delete().catch((e) => {
         console.log("---------------invoice router delete------------");
         console.log(e);
@@ -224,7 +226,7 @@ router.post('/:id/editline/:idline', isLoggedIn, async (req, res) => {
 router.get('/details/:id', async (req, res) => {
     const { id } = req.params;
     console.log('edit id :' + id);
-    const invoice = new Invoice(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    const invoice = new Invoice(id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     await invoice.pullData();
     console.log("despues de pullData");
     invoice.show();

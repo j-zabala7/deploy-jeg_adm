@@ -25,6 +25,12 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="delivered">Entregó:</label> <br>
+                            <input type="text" name="deliverer" id="deliverer" class="form-control form-control-lg"
+                                autocomplete="on">
+                        </div>
+
+                        <div class="form-group">
                             <label for="emp_id">Empleado:</label>
                             <select name="emp_id" id="emp_id" class="form-control form-control-lg">
                                 <option value="default"> Seleccione un Empleado. </option>
@@ -33,11 +39,6 @@
                                 </option>
                                 {{/each}}
                             </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="delivered">Entregado:</label> <br>
-                            <input type="checkbox" name="delivered" id="delivered" value="delivered">
                         </div>
 
                         <div class="form-group">

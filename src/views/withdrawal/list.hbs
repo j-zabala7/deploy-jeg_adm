@@ -1,3 +1,11 @@
+<style>
+    #listdata_length{
+
+        position: relative;
+        left: 230px;
+
+    }
+</style>
 <br>
 <br>
 <div class="container p-2">
@@ -22,7 +30,7 @@
                 <th>Cantidad</th>
                 <th>Moneda</th>
                 <th>Tipo</th>
-                <th>Entregado</th>
+                <th>Entregó</th>
                 <th>Campaña</th>
                 <th>Trabajo</th>
                 <th>Fecha</th>
@@ -39,15 +47,7 @@
                 <td>{{ withdrawal_amount }}</td>
                 <td>{{ withdrawal_currency }}</td>
                 <td>{{ withdrawal_type }}</td>
-                {{#if delivered}}
-                <td>
-                    <i class="fas fa-check"></i>
-                </td>
-                {{else}}
-                <td>
-                    <i class="fas fa-times"></i>
-                </td>
-                {{/if}}
+                <td>{{ withdrawal.deliverer }}</td>
                 <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
                 <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
                 <td>{{ withdrawal_date }}</td>
@@ -59,16 +59,16 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>ID</th>
-                <th>Emplado</th>
-                <th>Cantidad</th>
-                <th>Moneda</th>
-                <th>Tipo</th>
-                <th>Entregado</th>
-                <th>Campaña</th>
-                <th>Trabajo</th>
-                <th>Fecha</th>
-                <th>Descripción</th>
+                <th>Total:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -80,7 +80,41 @@
     $(document).ready(function () {
         $('#listdata').DataTable({
             language: { url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json" },
-            dom: 'Bfrtip',
+            dom: 'Bfrtipl',
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                totalSubt = api
+                    .column(2)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotalSubt = api
+                    .column(2, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(2).footer()).html(
+                    '$' + pageTotalSubt + ' ( $' + totalSubt + ' total)'
+                );
+
+            },
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             buttons: [
                 {
                     extend: 'copy',

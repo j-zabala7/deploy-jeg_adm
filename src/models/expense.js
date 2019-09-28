@@ -7,7 +7,7 @@ function Expense(id, made_to, amount, date, description, state, camp_id, work_id
     this.state = state;
     this.camp_id = camp_id;
     this.work_id = work_id;
-    this.date = date;
+    this.date = (date == "") ? null : ("'" + date + "'");
     this.description = description;
     this.made_to = made_to;
     this.currency = currency;
@@ -50,7 +50,7 @@ Expense.prototype.makePersistent = async function () {
     const date = this.date;
     const description = this.description;
 
-    await pool.query("insert into jeg_adm.expenses values (default,'" + made_to + "','" + amount + "','" + description + "','" + state + "','" + date + "'," + camp_id + "," + work_id + ",'" + currency + "');");
+    await pool.query("insert into jeg_adm.expenses values (default,'" + made_to + "','" + amount + "','" + description + "','" + state + "'," + date + "," + camp_id + "," + work_id + ",'" + currency + "');");
 }
 
 Expense.prototype.pullData = async function () {
@@ -85,7 +85,7 @@ Expense.prototype.updateData = async function () {
     const description = this.description;
     const id = this.id;
 
-    await pool.query("update jeg_adm.expenses set made_to='" + made_to + "',expenses_amount=" + amount + ",expenses_state='" + state + "',expenses_description='" + description + "',campaign_id=" + camp_id + ",work_id=" + work_id + ",expenses_date='" + date + "',expenses_currency='" + currency + "' where expenses_id=" + id + ";");
+    await pool.query("update jeg_adm.expenses set made_to='" + made_to + "',expenses_amount=" + amount + ",expenses_state='" + state + "',expenses_description='" + description + "',campaign_id=" + camp_id + ",work_id=" + work_id + ",expenses_date=" + date + ",expenses_currency='" + currency + "' where expenses_id=" + id + ";");
 }
 
 Expense.prototype.delete = async function () {

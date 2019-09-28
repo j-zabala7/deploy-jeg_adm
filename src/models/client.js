@@ -1,17 +1,17 @@
 const pool = require('../database.js');
 
 
-function Client(dni, name, cuitcuil, addr, id, email, phone){
+function Client(dni, name, cuitcuil, addr, id, email, phone) {
     this.id = id;
-    this.dni = dni;
+    this.dni = (dni == "") ? null : ("'" + dni + "'");
     this.name = name;
-    this.cuitcuil = cuitcuil;
+    this.cuitcuil = (cuitcuil == "") ? null : ("'" + cuitcuil + "'");
     this.addr = addr;
     this.email = email;
     this.phone = phone;
 }
 
-Client.prototype.show = function() {
+Client.prototype.show = function () {
     const dni = this.dni;
     const name = this.name;
     const cuitcuil = this.cuitcuil;
@@ -19,40 +19,40 @@ Client.prototype.show = function() {
     const email = this.email;
     const phone = this.phone;
 
-    console.log(dni+", "+name+", "+cuitcuil+", "+addr+", "+email+", "+phone+", "+this.id);
+    console.log(dni + ", " + name + ", " + cuitcuil + ", " + addr + ", " + email + ", " + phone + ", " + this.id);
 }
 
-Client.prototype.makePersistent = async function(){
+Client.prototype.makePersistent = async function () {
     const dni = this.dni;
     const name = this.name;
     const cuitcuil = this.cuitcuil;
     const addr = this.addr;
     const email = this.email;
     const phone = this.phone;
-    await pool.query("insert into jeg_adm.client values (default,'"+ name +"','"+ cuitcuil +"','"+ dni +"','"+ email +"','"+ phone +"','"+ addr +"');");
+    await pool.query("insert into jeg_adm.client values (default,'" + name + "'," + cuitcuil + "," + dni + ",'" + email + "','" + phone + "','" + addr + "');");
 }
 
-Client.prototype.pullData = async function(type){
+Client.prototype.pullData = async function (type) {
     var dni = this.dni;
     var id = this.id;
     var cuitcuil = this.cuitcuil;
     var info;
 
-    console.log("type: "+type);
+    console.log("type: " + type);
 
-    if(type!=2 && type!=1 && type!=3)
+    if (type != 2 && type != 1 && type != 3)
         console.error("In models client.js: pullData -> type!=1 and type!=2 and type!=3");
 
-    if(type==1){ //find by dni
-        info = await pool.query("select * from jeg_adm.client where client_dni="+dni+";");
+    if (type == 1) { //find by dni
+        info = await pool.query("select * from jeg_adm.client where client_dni=" + dni + ";");
         console.log(info);
     }
-    if(type==2){ //find by id
-        info =  await pool.query("select * from jeg_adm.client where client_id="+id+";");
+    if (type == 2) { //find by id
+        info = await pool.query("select * from jeg_adm.client where client_id=" + id + ";");
         console.log(info);
     }
-    if(type==3){ // find by cuitcuil
-        info =  await pool.query("select * from jeg_adm.client where cuil_cuit="+cuitcuil+";");
+    if (type == 3) { // find by cuitcuil
+        info = await pool.query("select * from jeg_adm.client where cuil_cuit=" + cuitcuil + ";");
         console.log(info);
     }
     this.dni = info.rows[0].client_dni;
@@ -66,7 +66,7 @@ Client.prototype.pullData = async function(type){
     return;
 }
 
-Client.prototype.updateData = async function(){
+Client.prototype.updateData = async function () {
     const id = this.id;
 
 
@@ -77,13 +77,13 @@ Client.prototype.updateData = async function(){
     const email = this.email;
     const phone = this.phone;
 
-    await pool.query("update jeg_adm.client set client_dni='"+dni+"',client_name='"+name+"',cuil_cuit='"+cuitcuil+"',addr='"+addr+"',email='"+email+"',phone='"+phone+"' where client_id="+id+";");
+    await pool.query("update jeg_adm.client set client_dni=" + dni + ",client_name='" + name + "',cuil_cuit=" + cuitcuil + ",addr='" + addr + "',email='" + email + "',phone='" + phone + "' where client_id=" + id + ";");
 }
 
-Client.prototype.delete = async function(){
+Client.prototype.delete = async function () {
     const id = this.id;
 
-    await pool.query("delete from jeg_adm.client where client_id="+id+";");
+    await pool.query("delete from jeg_adm.client where client_id=" + id + ";");
 }
 
 module.exports.client = Client; 

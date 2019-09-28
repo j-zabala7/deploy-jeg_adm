@@ -3,13 +3,13 @@ const pool = require('../database.js');
 
 function Employee(id, dni, name, cuil, email, addr, phone, birthday) {
     this.id = id;
-    this.dni = dni;
+    this.dni = (dni == "") ? null : ("'" + dni + "'");
     this.name = name;
-    this.cuil = cuil;
+    this.cuil = (cuil == "") ? null : ("'" + cuil + "'");;
     this.email = email;
     this.addr = addr;
     this.phone = phone;
-    this.birthday = birthday;
+    this.birthday = (birthday == "") ? (null) : ("'" + birthday + "'");
 }
 
 Employee.prototype.show = function () {
@@ -33,7 +33,7 @@ Employee.prototype.makePersistent = async function () {
     const email = this.email;
     const phone = this.phone;
     const birthday = this.birthday;
-    await pool.query("insert into jeg_adm.employee values (default,'" + dni + "','" + name + "','" + cuil + "','" + email + "','" + addr + "','" + phone + "','" + birthday + "');");
+    await pool.query("insert into jeg_adm.employee values (default," + dni + ",'" + name + "'," + cuil + ",'" + email + "','" + addr + "','" + phone + "'," + birthday + ");");
 }
 
 Employee.prototype.pullData = async function (type) {
@@ -82,7 +82,7 @@ Employee.prototype.updateData = async function () {
     const birthday = this.birthday;
     const id = this.id;
 
-    await pool.query("update jeg_adm.employee set employee_dni='" + dni + "',employee_name='" + name + "',employee_cuil='" + cuil + "',employee_addr='" + addr + "',employee_email='" + email + "',employee_phone='" + phone + "',employee_birthday='" + birthday + "' where employee_id=" + id + ";");
+    await pool.query("update jeg_adm.employee set employee_dni=" + dni + ",employee_name='" + name + "',employee_cuil=" + cuil + ",employee_addr='" + addr + "',employee_email='" + email + "',employee_phone='" + phone + "',employee_birthday=" + birthday + " where employee_id=" + id + ";");
 }
 
 Employee.prototype.delete = async function () {
