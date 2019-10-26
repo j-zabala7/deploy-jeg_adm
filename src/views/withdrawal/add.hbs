@@ -25,6 +25,14 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="concept">En Concepto de:</label>
+                            <select name="concept" id="emp_id" class="form-control form-control-lg">
+                                <option value="Retiro"> Retiro </option>
+                                <option value="Adelanto" selected> Adelanto </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="delivered">Entregó:</label> <br>
                             <input type="text" name="deliverer" id="deliverer" class="form-control form-control-lg"
                                 autocomplete="on">
@@ -97,5 +105,12 @@
             document.getElementById("work_id").options.length = 1;
         }
     }
+
+    function SetSelectedOption() {
+        document.getElementById("concept").value = 'adelanto';
+    }
+
+    //$(document).ready(SetSelectedOption);
+
 
 </script>

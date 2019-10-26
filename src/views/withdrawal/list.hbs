@@ -1,5 +1,5 @@
 <style>
-    #listdata_length{
+    #listdata_length {
 
         position: relative;
         left: 230px;
@@ -30,6 +30,7 @@
                 <th>Cantidad</th>
                 <th>Moneda</th>
                 <th>Tipo</th>
+                <th>En concepto de</th>
                 <th>Entregó</th>
                 <th>Campaña</th>
                 <th>Trabajo</th>
@@ -47,7 +48,8 @@
                 <td>{{ withdrawal_amount }}</td>
                 <td>{{ withdrawal_currency }}</td>
                 <td>{{ withdrawal_type }}</td>
-                <td>{{ withdrawal.deliverer }}</td>
+                <td>{{ withdrawal_concept }}</td>
+                <td>{{ deliverer }}</td>
                 <td> <a href="/campaign/details/{{campaign_id}}"> {{ campaign_id }} - {{ campaign_name }} </a> </td>
                 <td> <a href="/work/details/{{work_id}}"> {{ work_id }} - {{ type }} </a> </td>
                 <td>{{ withdrawal_date }}</td>
@@ -60,6 +62,7 @@
         <tfoot>
             <tr>
                 <th>Total:</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

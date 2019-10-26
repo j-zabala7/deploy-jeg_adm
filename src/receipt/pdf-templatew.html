@@ -83,7 +83,7 @@
 
 <body>
     <div class="report-header">
-        <h3>Adelanto - {{employee.name}}</h3>
+        <h3>{{concept}} - {{employee.name}}</h3>
         <p>{{date}}</p>
     </div>
     <!-- <hr style="border-top: dotted 1px;" /> -->
@@ -92,7 +92,7 @@
         <!-- <p>Recibí de {{signature}} la cantidad de pesos {{amount}}. </p>
         <p>En concepto de Adelanto de {{campaign.name}}</p> -->
         <b>Recibí de {{signature}} la cantidad de pesos {{amount}}, </b>
-        <b>en concepto de Adelanto de {{work.name}} camapaña {{campaign.name}}.</b>
+        <b>en concepto de {{concept}} de {{work.name}} (Campaña {{campaign.name}}).</b>
     </div>
     <br>
     <div class="report-body">

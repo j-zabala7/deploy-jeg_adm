@@ -10,10 +10,10 @@ module.exports = {
         console.log('recibo>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><');
         console.log(info);
         var templateHtml;
-        if (info.work)
-            templateHtml = fs.readFileSync(path.join('/home/joaquin/Escritorio/GIT/jeg-adm/src/receipt/', 'pdf-template2.html'), 'utf8');
-        else
+        if (info.work_type)
             templateHtml = fs.readFileSync(path.join('/home/joaquin/Escritorio/GIT/jeg-adm/src/receipt/', 'pdf-templatew.html'), 'utf8');
+        else
+            templateHtml = fs.readFileSync(path.join('/home/joaquin/Escritorio/GIT/jeg-adm/src/receipt/', 'pdf-template2.html'), 'utf8');
 
         console.log(templateHtml);
         var milis = new Date();
@@ -26,16 +26,17 @@ module.exports = {
                 name: info.employee_name
             },
             //date: (d.getDate() + '\\' + (d.getMonth() + 1) + '\\' + d.getFullYear()),
-            date: (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()),
+            date: (date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear()),
             campaign: {
                 name: info.campaign_name
             },
             work: {
-                name: info.work_name
+                name: info.work_type
             },
             amount: info.amount,
             name: 'recibo-' + info.employee_name,
-            signature: info.signature
+            signature: info.signature,
+            concept: info.concept
         };
         var pdfPath = path.join('/home/joaquin/Escritorio/ppdf', `${data.name}-${data.date}-${milis}.pdf`);
 
@@ -57,9 +58,6 @@ module.exports = {
         console.log(template);
         var html = template(data);
         console.log(html);
-
-
-
 
 
         const browser = await puppeteer.launch();

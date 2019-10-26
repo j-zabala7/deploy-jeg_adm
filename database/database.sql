@@ -121,6 +121,7 @@ create table withdrawal(
 	withdrawal_description varchar(200),
 	--signature varchar(20),
 	withdrawal_currency varchar(50),
+	withdrawal_concept varchar(50),
 	constraint pk_withdrawal primary key(withdrawal_id),
 	constraint fk_withdrawal_employee foreign key (employee_id) references employee(employee_id),
 	constraint fk_withdrawal_campaign foreign key (campaign_id) references campaign(campaign_id),
@@ -289,6 +290,10 @@ for EACH ROW
 EXECUTE PROCEDURE jeg_adm.function_update_invoice();
 
 insert into jeg_adm.iva values (default, 10.5, (10.5/100), 'Servicios');
+insert into jeg_adm.iva values (default, 21, (21/100), 'Insumos');
+
+insert into jeg_adm.user values (default, 'admin', '$2a$10$aWUr2SR.kdmJ1CtS6qft/uRQPxnyIgtze4MhYTNOCn3rB650aq3oS', 'admin');
+
 
 create table jeg_adm.payment (
 	payment_id serial,
@@ -301,9 +306,17 @@ create table jeg_adm.payment (
 	id_payment_method varchar(100),
 	payment_currency varchar(50),
 	payment_description varchar(200),
+--	company_id integer,
 	constraint pk_payment primary key (payment_id),
 	constraint fk_payment_invoice foreign key (invoice_id) references jeg_adm.invoice(invoice_id),
 	constraint fk_payment_campaign foreign key (campaign_id) references jeg_adm.campaign(campaign_id),
-	constraint fk_payment_work foreign key (work_id) references jeg_adm.work(work_id)
+	constraint fk_payment_work foreign key (work_id) references jeg_adm.work(work_id),
+--	constraint fk_payment_company foreign key (company_id) references jeg_adm.company(company_id)
+);
+
+create table jeg_adm.company (
+	company_id integer,
+	company_name varchar(50),
+	constraint pk_company primary key (company_id)
 );
 
