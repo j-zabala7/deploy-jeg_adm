@@ -10,10 +10,11 @@ module.exports = {
         console.log('recibo>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><');
         console.log(info);
         var templateHtml;
+        const pathToReceipt = '/home/joaquin/Escritorio/GIT/jeg-adm/src/receipt/'; // para windows: \\ (uno es para el escapar el simbolo)
         if (info.work_type)
-            templateHtml = fs.readFileSync(path.join('/home/joaquin/Escritorio/GIT/jeg-adm/src/receipt/', 'pdf-templatew.html'), 'utf8');
+            templateHtml = fs.readFileSync(path.join(pathToReceipt, 'pdf-templatew.html'), 'utf8');
         else
-            templateHtml = fs.readFileSync(path.join('/home/joaquin/Escritorio/GIT/jeg-adm/src/receipt/', 'pdf-template2.html'), 'utf8');
+            templateHtml = fs.readFileSync(path.join(pathToReceipt, 'pdf-template2.html'), 'utf8');
 
         console.log(templateHtml);
         var milis = new Date();
